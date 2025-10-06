@@ -74,13 +74,13 @@ Agora, vamos instalar um gerenciador de versões Python, o _**Pyenv**_. Execute 
 curl https://pyenv.run | bash
 ```
 
-Com o Pyenv instalado, vamos adicionar as variáveis de ambiente. Execute os seguintes comandos:
+Com o Pyenv instalado, vamos adicionar as variáveis de ambiente. Execute o seguinte comando (esse comando irá abrir um editor de texto no terminal):
 
 ```
-nano ~/.bashrc (isso irá abrir um editor de texto no terminal)
+nano ~/.bashrc
 ```
 
-Com o editor aberto, vá até o final do editor de texto e cole esses paths:
+Com o editor aberto, vá até o final do editor de texto (com a tecla "seta para baixo") e cole esses paths:
 
 ```
 export PYENV_ROOT="$HOME/.pyenv"
