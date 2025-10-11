@@ -14,7 +14,7 @@ wsl --install -d Ubuntu-22.04
 
 Ao rodar esse comando, será instalado o WSL com a distribuição Ubuntu na versão 22.04. Caso seja solicitado um UNIX user e password, preencha livremente.
 
-**1.1 Instalar o Git com o Winget**
+### **1.1 Instalar o Git com o Winget**
 
 1.  **Abra o Terminal no VSCode:**
 
