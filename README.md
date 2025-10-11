@@ -1,170 +1,141 @@
-# Wine Quality Prediction
+# Projeto de PO-235
 
-<div align="center">
+## Como configurar o ambiente
 
-![Python Version](https://img.shields.io/badge/python-3.13.7-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-active-success.svg)
+Para trabalharmos de forma padronizada e controlada, vamos trabalhar usando Linux. Primeiramente, vamos seguir com a instalação do WSL (Windows Subsystem for Linux). Esse passo só é necessário caso sua máquina seja Windows, se for linux não é necessário. 
 
-</div>
-
-## 📋 Sobre o Projeto
-
-Este projeto foi desenvolvido como parte da disciplina **PO-235 - Projeto de Ciência de Dados**, ministrada pelo **Professor Filipe Verri**. O objetivo é criar um modelo de machine learning capaz de prever a qualidade de vinhos com base em suas características.
-
-Utilizando o dataset [Wine Quality](https://archive.ics.uci.edu/dataset/186/wine+quality) da UCI Machine Learning Repository, este projeto explora técnicas de classificação para avaliar vinhos tintos e brancos da região do Vinho Verde em Portugal.
-
-## 🎯 Objetivos
-
-- Desenvolver um modelo de classificação para prever a qualidade de vinhos
-- Analisar a importância de características físico-químicas na qualidade do vinho
-- Implementar boas práticas de engenharia de software em projetos de ciência de dados
-- Criar uma interface interativa para visualização e predição
-
-## 📊 Dataset
-
-O projeto utiliza o **Wine Quality Dataset** disponibilizado pela UCI Machine Learning Repository:
-
-- **Fonte**: [UCI Wine Quality Dataset](https://archive.ics.uci.edu/dataset/186/wine+quality)
-- **Instâncias**: 4.898 amostras (1.599 vinhos tintos + 4.898 vinhos brancos)
-- **Características**: 11 variáveis físico-químicas
-- **Target**: Qualidade do vinho (score de 0 a 10)
-
-### Variáveis do Dataset
-
-| Variável              | Descrição                 |
-|-----------------------|---------------------------|
-| fixed_acidity         | Acidez fixa               |
-| volatile_acidity      | Acidez volátil            |
-| citric_acid           | Ácido cítrico             |
-| residual_sugar        | Açúcar residual           |
-| chlorides             | Cloretos                  |
-| free_sulfur_dioxide   | Dióxido de enxofre livre  |
-| total_sulfur_dioxide  | Dióxido de enxofre total  |
-| density               | Densidade                 |
-| pH                    | pH                        |
-| sulphates             | Sulfatos                  |
-| alcohol               | Teor alcoólico            |
-| quality               | Qualidade (variável alvo) |
-
-## 🤖 Metodologia
-
-### Modelos Avaliados
-
-Durante o desenvolvimento do projeto, três algoritmos de ensemble learning foram testados e comparados:
-
-- **Random Forest** ✅ (Modelo selecionado)
-- **XGBoost**
-- **Gradient Boosting**
-
-Após análise comparativa de performance, métricas de avaliação e interpretabilidade, o **Random Forest** foi escolhido como modelo final para o projeto.
-
-### Abordagem
-
-1. **Análise Exploratória de Dados (EDA)**: Compreensão das distribuições e correlações
-2. **Pré-processamento**: Tratamento de dados, feature engineering
-3. **Treinamento de Modelos**: Experimentação com diferentes algoritmos
-4. **Avaliação**: Comparação de métricas (acurácia, precisão, recall, F1-score)
-5. **Otimização**: Tuning de hiperparâmetros do modelo selecionado
-6. **Deploy**: Interface web interativa com Streamlit
-
-## 🛠️ Tecnologias Utilizadas
-
-- **Python 3.13.7**: Linguagem principal do projeto
-- **scikit-learn**: Implementação de modelos de machine learning
-- **XGBoost**: Biblioteca de gradient boosting
-- **pandas & numpy**: Manipulação e análise de dados
-- **matplotlib & seaborn**: Visualização de dados
-- **Streamlit**: Interface web interativa
-- **UV**: Gerenciador de pacotes Python
-- **Pyenv**: Gerenciador de versões Python
-- **pytest**: Framework de testes
-- **GitHub Actions**: CI/CD pipeline
-
-## 📁 Estrutura do Projeto
+### 1. WSL
+É necessário instalar a extensão WSL dentro do VSCode, que pode ser feita na aba de extensões no canto esquerdo da IDLE e procurar o nome da extensão.
+Após isso, para instalar o WSL, vá até o PowerShell (tecla de atalho do windows + S: PowerShell) e digite o seguinte comando:
 
 ```
-po-235/
-├── 📂 configs/           # Arquivos de configuração
-├── 📂 docs/              # Documentação do projeto
-│   ├── 1_como_configurar_ambiente.md
-│   ├── 2_como_contribuir_com_o_projeto.md
-│   └── 3_arquitetura_do_projeto.md
-├── 📂 entrypoints/       # Scripts principais (treinamento, predição, deploy)
-├── 📂 model/             # Modelos treinados e artefatos
-├── 📂 src/               # Dados e código fonte
-│   ├── winequality-red.csv
-│   ├── winequality-white.csv
-│   └── winequality.names
-├── 📂 streamlit/         # Interface web
-├── 📂 tests/             # Testes automatizados
-├── 📜 Makefile           # Comandos de automação
-├── 📜 README.md          # Este arquivo
-└── 📜 LICENSE            # Licença do projeto
+wsl --install -d Ubuntu-22.04
 ```
 
-Para mais detalhes sobre a arquitetura, consulte [`docs/3_arquitetura_do_projeto.md`](./docs/3_arquitetura_do_projeto.md).
+Ao rodar esse comando, será instalado o WSL com a distribuição Ubuntu na versão 22.04. Caso seja solicitado um UNIX user e password, preencha livremente.
 
-## 🚀 Como Começar
+**1.1 Instalar o Git com o Winget**
 
-### Pré-requisitos
+1.  **Abra o Terminal no VSCode:**
 
-- Sistema operacional Linux (ou WSL no Windows)
-- Git instalado
-- Acesso à internet para download de dependências
+      * Vá no menu superior `Terminal > New Terminal` ou use o atalho `Ctrl + '` (a tecla de crase).
+      * Certifique-se de que o terminal aberto seja o **PowerShell** (geralmente é o padrão).
 
-### Instalação e Configuração
+2.  **Verifique se o Winget está funcionando:**
+    Digite o comando abaixo e aperte Enter. Você deve ver uma lista de opções do Winget.
 
-Para configurar o ambiente de desenvolvimento completo, siga o guia detalhado em [`docs/1_como_configurar_ambiente.md`](./docs/1_como_configurar_ambiente.md).
+    ```powershell
+    winget --version
+    ```
 
-**Resumo dos passos:**
+4.  **Instale o Git:**
+    Agora, execute o comando de instalação. Ele vai baixar e instalar o Git para você automaticamente.
 
-1. **Clonar o repositório**
-   ```bash
-   git clone https://github.com/camposdojoao/po-235.git
-   cd po-235
-   ```
+    ```powershell
+    winget install --id Git.Git -e --source winget
+    ```
 
-2. **Configurar ambiente**
-   ```bash
-   make install-uv
-   make install-dev
-   ```
+      * `winget install`: O comando para instalar.
+      * `--id Git.Git`: O identificador exato do pacote que queremos.
+      * `-e`: Significa "exact", para garantir que estamos instalando o pacote com esse ID exato.
+      * `--source winget`: Diz para usar o repositório principal de pacotes da comunidade do Winget.
 
-3. **Executar a aplicação Streamlit**
-   ```bash
-   make streamlit
-   ```
+5.  **Feche e Reabra o VSCode (Importante\!):**
+    Após a instalação ser concluída, feche completamente o VSCode e abra-o novamente. Isso é crucial para que o VSCode (e seu terminal) reconheça que o Git agora está instalado e disponível no sistema.
 
-## 🤝 Como Contribuir
+6.  **Verifique a Instalação:**
+    Abra um novo terminal no VSCode e digite:
 
-Este projeto segue boas práticas de desenvolvimento colaborativo com Git Flow simplificado. Para contribuir:
+    ```powershell
+    git --version
+    ```
 
-1. Atualize a branch `master`
-2. Crie uma branch seguindo o padrão `feature/*` ou `fix/*`
-3. Desenvolva e teste suas alterações
-4. Faça commit com mensagens descritivas
-5. Crie um Pull Request
+### 2. Repositório
 
-Para instruções detalhadas, consulte [`docs/2_como_contribuir_com_o_projeto.md`](./docs/2_como_contribuir_com_o_projeto.md).
+Abra sua IDE (VS Code, Cursor etc). Caso não tenha uma IDE instalada, a IDE recomendada é o VS Code. Siga até o link abaixo e faça o download e instalação: [VS Code](https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user)
 
-### Pipeline de CI/CD
+⚠️ **Observação:** Ao instalar a IDE, se certifique que a opção "Adicione em PATH" estará marcada.
 
-O projeto possui uma pipeline automatizada que valida:
-- ✅ Testes unitários
-- ✅ Linting (padrões de código)
-- ✅ Nomenclatura de branches
+Com o VS Code disponível, depois de abrí-lo, aperte a tecla F1 e procure:
 
-## 📚 Documentação
+```
+WSL: Connect to WSL using Distro...
+```
 
-- [Como Configurar o Ambiente](./docs/1_como_configurar_ambiente.md)
-- [Como Contribuir com o Projeto](./docs/2_como_contribuir_com_o_projeto.md)
-- [Arquitetura do Projeto](./docs/3_arquitetura_do_projeto.md)
+E selecione a distro que acabamos de instalar, _**Ubuntu 22.04**_. Ao fazer isso, o seu VS Code estará "dentro" dessa distro. É isto que queremos.
 
-## 👥 Equipe
+Com isto feito, podemos clonar o repositório. Abra o terminal do VS Code e digite:
 
-Projeto desenvolvido por estudantes da disciplina PO-235 - Projeto de Ciência de Dados.
+```
+git clone https://github.com/camposdojoao/po-235.git
+```
 
-## 📄 Licença
+Este comando irá clonar o repositório dentro da sua distribuição linux. Caso você não seja redirecionado à pasta do repositório, vá em "File", depois em "Open Folder" e selecione a pasta do projeto: "_**PO-235**_". Pronto, você está dentro do repositório.
 
-Este projeto está sob a licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+Depois de clonar o repositório, configure suas credenciais para fazer commits. Execute esses dois comandos:
+
+```
+git config --global user.email "seu@email.com"
+```
+
+```
+git config --global user.name "seu_nome"
+```
+
+### 3. Ambiente
+
+Com o repositório instalado, iremos prosseguir com a configuração do ambiente. Para isso, vamos utilizar o _**UV**_. _**UV**_ é um gerenciador de pacotes para Python. Com ele conseguimos controlar as bibliotecas que usaremos e as versões dessas bibliotecas.
+
+
+
+Para instalar o UV, abra o terminal do VS Code e execute este comando:
+
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Caso tenha o erro _**curl: (60) SSL certificate problem: unable to get local issuer certificate**_, entre em contato com o João para resolver :D.
+Com o UV instalado, vamos instalar pacotes básicos no nosso WSL. Esses pacotes vão ser necessários para instalar o Python e os nossos comandos do Makefile. No seu terminal, execute:
+
+```
+sudo apt update
+```
+
+```
+sudo apt install gcc build-essential make zlib1g zlib1g-dev openssl libssl-dev libbz2-dev libsqlite3-dev libffi-dev  libreadline-dev libncursesw5-dev tk-dev liblzma-dev
+```
+
+Agora, vamos instalar um gerenciador de versões Python, o _**Pyenv**_. Execute este comando no terminal:
+
+```
+curl https://pyenv.run | bash
+```
+
+Com o Pyenv instalado, vamos adicionar as variáveis de ambiente. Execute o seguinte comando (esse comando irá abrir um editor de texto no terminal):
+
+```
+nano ~/.bashrc
+```
+
+Com o editor aberto, vá até o final do editor de texto (com a tecla "seta para baixo") e cole esses paths:
+
+```
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$PYENV_ROOT/shims:$PATH"
+eval "$(pyenv init -)"
+export PATH="$HOME/.local/bin:$PATH"
+```
+Depois de colar, aperte _**Ctrl+X**_, _**Y**_ e depois aperte _**Enter**_.
+
+Depois de fazer isso, cole este comando no terminal para aplicar as alterações:
+
+```
+source ~/.bashrc
+```
+
+Com isso feito, vamos instalar a versão do Python (essa parte pode demorar uns minutinhos):
+
+```
+pyenv install 3.13.7
+```
