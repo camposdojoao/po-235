@@ -16,8 +16,10 @@ jobs:
 
       - name: Validate branch name
         run: |
-          if [[ ! "${GITHUB_REF_NAME}" =~ ^(feature|fix|hotfix|release)\/.+$ ]]; then
-            echo "❌ Nome de branch inválido: ${GITHUB_REF_NAME}"
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          echo "Verificando branch: ${BRANCH_NAME}"
+          if [[ ! "${BRANCH_NAME}" =~ ^(feature|fix|hotfix|release)/.+$ ]]; then
+            echo "❌ Nome de branch inválido: ${BRANCH_NAME}"
             exit 1
           fi
 
