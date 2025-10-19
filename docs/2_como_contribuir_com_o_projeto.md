@@ -4,24 +4,24 @@ Este documento irá apresentar um passo a passo estabelecendo padrões de contri
 
 ## Padrões de Uso do Git no Projeto
 
-Primeiramente, vamos nos certificar de que a branch master está atualizada. Para isso, execute o seguinte comando no seu terminal:
+Primeiramente, vamos nos certificar de que a branch main está atualizada. Para isso, execute o seguinte comando no seu terminal:
 
 ```
-git checkout master
+git checkout main
 ```
 
-Depois que se certificar que está na master, execute:
+Depois que se certificar que está na main, execute:
 
 ```
 git pull
 ```
 
 
-Esse comando irá atualizar a sua branch master de acordo com a branch master remota, garantindo que o seu repositório está atualizado de acordo com a última versão publicada.
+Esse comando irá atualizar a sua branch main de acordo com a branch main remota, garantindo que o seu repositório está atualizado de acordo com a última versão publicada.
 
 ### Criação de branch
 
-Com a master atualizada, podemos criar nossa branch e trabalhar em nossa task. Seguindo as boas práticas de desenvolvimento, vamos criar uma branch por task desenvolvida. 
+Com a main atualizada, podemos criar nossa branch e trabalhar em nossa task. Seguindo as boas práticas de desenvolvimento, vamos criar uma branch por task desenvolvida. 
 
 1. As branches seguirão uma organização simples usando prefixos _feature/_ e _fix/_. Se sua branch adicionar uma funcionalidade nova, ela deverá ter o prefixo _feature/_, caso sua branch faça uma correção ou exclusão de alguma funcionalidade, ela deverá ter o prefixo _fix/_. 
 
@@ -128,7 +128,7 @@ Após fazer o push, algo assim será retornado:
 
 ## Criação de PR (Pull Request)
 
-Com o push feito, sua branch estará disponível no servidor remoto e você poderá criar um PR. O PR é a etapa em que você solicita a integração das alterações commitadas na sua branch à branch principal do projeto (master). Esse processo permite que o código seja revisado, validado e, se aprovado, mesclado ao repositório remoto. Para que seja possível o merge do PR, é necessário que pelo menos um integrante do time o aprove.
+Com o push feito, sua branch estará disponível no servidor remoto e você poderá criar um PR. O PR é a etapa em que você solicita a integração das alterações commitadas na sua branch à branch principal do projeto (main). Esse processo permite que o código seja revisado, validado e, se aprovado, mesclado ao repositório remoto. Para que seja possível o merge do PR, é necessário que pelo menos um integrante do time o aprove.
 
 Para criar o seu PR, vá até o repositório do projeto: [Repositório do projeto](https://github.com/camposdojoao/po-235)
 
