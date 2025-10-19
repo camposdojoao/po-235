@@ -18,17 +18,20 @@ df_white['labels'] = 1
 data = pd.concat([df_red, df_white], ignore_index=True)
 
 # Features
-X = data[['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
-          'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density',
-          'pH', 'sulphates', 'alcohol']]
+#X = data[['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar',
+#          'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density',
+ #         'pH', 'sulphates', 'alcohol']]
+
+X = data[['volatile acidity', 'density', 'alcohol','total sulfur dioxide',
+          'chlorides','sulphates']]
 
 # Criando categoria
 def categoria_quality(q):
 
-    if q > 7:
+    if q >= 7:
         return "Boa"
     
-    elif 5 <= q <= 7:
+    elif 5 < q < 7:
         return "Média"
     
     else:
@@ -73,3 +76,4 @@ y_pred_v2 = model_v2.predict(X_test)
 print(f"Acurácia: {accuracy_score(y_test, y_pred_v2) * 100:.2f} %\n")
 print("Relatório de Classificação:")
 print(classification_report(y_test, y_pred_v2, digits=3))
+
