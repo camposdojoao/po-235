@@ -7,6 +7,12 @@ Este documento irá apresentar um passo a passo estabelecendo padrões de contri
 Primeiramente, vamos nos certificar de que a branch master está atualizada. Para isso, execute o seguinte comando no seu terminal:
 
 ```
+git checkout master
+```
+
+Depois que se certificar que está na master, execute:
+
+```
 git pull
 ```
 
