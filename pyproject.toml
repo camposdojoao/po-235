@@ -16,7 +16,8 @@ requires-python = "==3.13.7"
 dependencies = [
     "pandas == 2.3.3",
     "pytest == 8.4.2",
-    "streamlit == 1.50.0"
+    "streamlit == 1.50.0",
+    "ruff >= 0.14.1",
 ]
 
 
