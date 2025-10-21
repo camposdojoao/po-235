@@ -21,12 +21,11 @@ streamlit:
 ######################################
 ## RUFF FORMAT COMMANDS ##
 
-format:
-	uv run ruff check . --select I --fix
-	uv run ruff format .
-
 check:
-	uv run ruff format . --check
+	uv run ruff check . --fix
+
+format:
+	uv run ruff format .
 
 ######################################
 ## TESTS COMMANDS ##

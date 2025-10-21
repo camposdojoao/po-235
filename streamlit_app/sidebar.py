@@ -60,7 +60,7 @@ class Sidebar:
         st.markdown("---")
 
     def _render_navigation_item(
-        self, _item_key: str, item_config: dict[str, Any]
+        self, item_config: dict[str, Any]
     ) -> None:
         """
         Renderiza um único item de navegação (expander com botão).
@@ -70,7 +70,6 @@ class Sidebar:
         (se configurado). Atualiza a view no session state quando o botão é clicado.
 
         Args:
-            _item_key (str): Identificador único para o item de navegação (não utilizado).
             item_config (dict): Dicionário de configuração contendo:
                 - title (str): Título de exibição para o expander.
                 - expanded (bool): Se o expander deve estar aberto por padrão.
@@ -107,4 +106,4 @@ class Sidebar:
             self._render_header()
 
             for item_key, item_config in self.navigation_items.items():
-                self._render_navigation_item(item_key, item_config)
+                self._render_navigation_item(item_config)
