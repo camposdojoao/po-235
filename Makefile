@@ -23,6 +23,7 @@ streamlit:
 
 check:
 	uv run ruff check . --fix
+	uv run ruff format . --check
 
 format:
 	uv run ruff format .
@@ -30,4 +31,4 @@ format:
 ######################################
 ## TESTS COMMANDS ##
 
-run-ci: format check
+run-ci: check

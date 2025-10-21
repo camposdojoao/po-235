@@ -59,9 +59,7 @@ class Sidebar:
             st.image(self.logo_path, width=self.logo_width)
         st.markdown("---")
 
-    def _render_navigation_item(
-        self, item_config: dict[str, Any]
-    ) -> None:
+    def _render_navigation_item(self, item_config: dict[str, Any]) -> None:
         """
         Renderiza um único item de navegação (expander com botão).
 
