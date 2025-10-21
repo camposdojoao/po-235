@@ -1,16 +1,17 @@
 from pathlib import Path
+from typing import Any
 
 import streamlit as st
 
 
 class Sidebar:
-    def __init__(self):
+    def __init__(self) -> None:
         """
-        Initialize the Sidebar with default configuration.
+        Inicializa a Sidebar com configuração padrão.
 
-        Sets up the logo path, dimensions, application title, and configures
-        all navigation menu items with their respective properties including
-        titles, descriptions, button texts, and view mappings.
+        Configura o caminho do logotipo, dimensões, título da aplicação e
+        todos os itens do menu de navegação com suas respectivas propriedades,
+        incluindo títulos, descrições, textos de botões e mapeamento de views.
         """
         # Caminho absoluto para a imagem baseado na localização deste arquivo
         self.logo_path = str(Path(__file__).parent / "img" / "ITA.png")
@@ -35,13 +36,13 @@ class Sidebar:
             },
         }
 
-    def _render_header(self):
+    def _render_header(self) -> None:
         """
-        Render the sidebar header with logo and title.
+        Renderiza o cabeçalho da sidebar com logotipo e título.
 
-        Creates a centered layout using Streamlit columns to display the
-        application logo and title. Uses a 3-column layout with proportions
-        [1.75, 2, 1] to center the logo in the middle column.
+        Cria um layout centralizado usando colunas do Streamlit para exibir
+        o logotipo e título da aplicação. Utiliza um layout de 3 colunas com
+        proporções [1, 2, 1] para centralizar o logotipo na coluna do meio.
 
         Returns:
             None
@@ -51,23 +52,23 @@ class Sidebar:
             st.image(self.logo_path, width=self.logo_width)
         st.markdown("---")
 
-    def _render_navigation_item(self, item_key, item_config):
+    def _render_navigation_item(self, _item_key: str, item_config: dict[str, Any]) -> None:
         """
-        Render a single navigation item (expander with button).
+        Renderiza um único item de navegação (expander com botão).
 
-        Creates an expandable section in the sidebar for a navigation item.
-        Displays the item's title, description (if available), and a button
-        (if configured). Updates the session state view when the button is clicked.
+        Cria uma seção expansível na sidebar para um item de navegação.
+        Exibe o título do item, descrição (se disponível) e um botão
+        (se configurado). Atualiza a view no session state quando o botão é clicado.
 
         Args:
-            item_key (str): Unique identifier for the navigation item
-            item_config (dict): Configuration dictionary containing:
-                - title (str): Display title for the expander
-                - expanded (bool): Whether the expander should be open by default
-                - description (str, optional): Description text to display
-                - button_text (str, optional): Text for the action button
-                - button_key (str, optional): Unique key for the button
-                - view (str): Target view to switch to when button is clicked
+            _item_key (str): Identificador único para o item de navegação (não utilizado).
+            item_config (dict): Dicionário de configuração contendo:
+                - title (str): Título de exibição para o expander.
+                - expanded (bool): Se o expander deve estar aberto por padrão.
+                - description (str, opcional): Texto de descrição a ser exibido.
+                - button_text (str, opcional): Texto para o botão de ação.
+                - button_key (str, opcional): Chave única para o botão.
+                - view (str): View de destino para alternar quando o botão for clicado.
 
         Returns:
             None
@@ -82,14 +83,13 @@ class Sidebar:
                 if st.button(item_config["button_text"], key=item_config["button_key"]):
                     st.session_state["view"] = item_config["view"]
 
-    def render(self):
+    def render(self) -> None:
         """
-        Main method to render the complete sidebar.
+        Método principal para renderizar a sidebar completa.
 
-        Orchestrates the rendering of all sidebar components in the correct order:
-        1. Header with logo and title
-        2. Databricks connection status
-        3. Navigation menu items (including Confluence documentation)
+        Orquestra a renderização de todos os componentes da sidebar na ordem correta:
+        1. Cabeçalho com logotipo e título
+        2. Itens do menu de navegação
 
         Returns:
             None

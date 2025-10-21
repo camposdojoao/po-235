@@ -2,20 +2,42 @@ import streamlit as st
 
 
 class Models:
-    def __init__(self):
+    def __init__(self) -> None:
         """
-        Initialize the ObservabilityView with default configuration.
+        Inicializa a view de Modelos com configuração padrão.
 
-        Sets up the display title, chart dimensions, and dataframe height
-        for the observability and cost monitoring interface.
+        Configura o título de exibição e altura dos gráficos para a
+        interface de visualização de modelos de Machine Learning.
+
+        Attributes:
+            title (str): Título da página de modelos.
+            chart_height (int): Altura dos gráficos em pixels.
         """
         self.title = "Modelos"
         self.chart_height = 500
 
-    def _load_data(self):
+    def _load_data(self) -> None:
+        """
+        Carrega os dados necessários para os modelos.
+
+        Método placeholder para carregar dados dos modelos de ML.
+        Atualmente não implementado.
+
+        Returns:
+            None
+        """
         pass
 
-    def render(self):
+    def render(self) -> None:
+        """
+        Renderiza a interface de visualização dos modelos.
+
+        Cria e exibe as abas para os diferentes modelos de Machine Learning
+        (Random Forest, XGBoost, Gradient Boost) na interface Streamlit.
+
+        Returns:
+            None
+        """
         st.title(self.title, anchor=False)
 
         rf_tab, xgb_tab, gb_tab = st.tabs(
