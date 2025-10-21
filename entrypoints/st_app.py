@@ -1,7 +1,6 @@
-import os
+from pathlib import Path
 import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 import streamlit as st
 
