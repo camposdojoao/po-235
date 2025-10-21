@@ -1,3 +1,10 @@
+"""
+Módulo responsável pela renderização da barra lateral da aplicação Streamlit.
+
+Este módulo contém a classe Sidebar que gerencia a exibição do logotipo,
+navegação e menu lateral da aplicação.
+"""
+
 from pathlib import Path
 from typing import Any
 
@@ -52,7 +59,9 @@ class Sidebar:
             st.image(self.logo_path, width=self.logo_width)
         st.markdown("---")
 
-    def _render_navigation_item(self, _item_key: str, item_config: dict[str, Any]) -> None:
+    def _render_navigation_item(
+        self, _item_key: str, item_config: dict[str, Any]
+    ) -> None:
         """
         Renderiza um único item de navegação (expander com botão).
 

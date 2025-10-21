@@ -1,5 +1,14 @@
-from pathlib import Path
+"""
+Aplicação principal Streamlit para visualização de modelos de Machine Learning.
+
+Este módulo serve como ponto de entrada para a aplicação Streamlit, gerenciando
+a navegação entre diferentes views e renderizando os componentes principais da
+interface (sidebar e modelos).
+"""
+
 import sys
+from pathlib import Path
+
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 import streamlit as st

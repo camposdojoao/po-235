@@ -1,3 +1,10 @@
+"""
+Módulo responsável pela visualização dos modelos de Machine Learning.
+
+Este módulo contém a classe Models que gerencia a exibição das abas
+de diferentes modelos de ML (Random Forest, XGBoost, Gradient Boost).
+"""
+
 import streamlit as st
 
 
