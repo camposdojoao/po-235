@@ -172,13 +172,16 @@ class Modelo:
         self.modelo.fit(self.X_train, self.y_train)
         return self.modelo
 
-    def save_model(self, filepath='models/modelo_random_forest.pkl'):
+    def save_model(self, filepath=None):
         """
-        Salva o modelo treinado em arquivo .pkl utilizando a biblioteca joblib.
+        Salva o modelo treinado em arquivo .joblib utilizando a biblioteca joblib.
+        
+        Se filepath não for fornecido, gera automaticamente o nome do arquivo
+        baseado no tipo do modelo usado (ex: 'models/modelo_RandomForestClassifier.joblib').
         
         Args:
             filepath (str, opcional): Caminho do arquivo onde o modelo será salvo. 
-                Padrão é 'models/modelo_random_forest.pkl'.
+                Se None, gera automaticamente baseado no tipo do modelo.
         
         Returns:
             None
@@ -187,15 +190,19 @@ class Modelo:
             IOError: Se houver problemas ao escrever o arquivo no disco.
             PermissionError: Se não houver permissão de escrita no diretório especificado.
         """
+        if filepath is None:
+            model_name = type(self.modelo).__name__
+            filepath = f'models/modelo_{model_name}.joblib'
+        
         joblib.dump(self.modelo, filepath)
         print(f"Modelo salvo em: {filepath}")
     
     # def load_model(self, filepath):
     #     """
-    #     Carrega um modelo previamente treinado e salvo em arquivo .pkl.
+    #     Carrega um modelo previamente treinado e salvo em arquivo .joblib.
         
     #     Args:
-    #         filepath (str): Caminho do arquivo .pkl contendo o modelo treinado.
+    #         filepath (str): Caminho do arquivo .joblib contendo o modelo treinado.
         
     #     Returns:
     #         sklearn.base.BaseEstimator: Modelo carregado do arquivo.
