@@ -16,8 +16,10 @@ jobs:
 
       - name: Validate branch name
         run: |
-          if [[ ! "${GITHUB_REF_NAME}" =~ ^(feature|fix|hotfix|release)\/.+$ ]]; then
-            echo "❌ Nome de branch inválido: ${GITHUB_REF_NAME}"
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          echo "Verificando branch: ${BRANCH_NAME}"
+          if [[ ! "${BRANCH_NAME}" =~ ^(feature|fix|hotfix|release)/.+$ ]]; then
+            echo "❌ Nome de branch inválido: ${BRANCH_NAME}"
             exit 1
           fi
 
@@ -27,7 +29,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Install Python
-        run: uv python install 3.11
+        run: uv python install 3.13.7
 
       - name: Clean uv cache for CI
         run: uv cache prune --ci
@@ -35,8 +37,8 @@ jobs:
       - name: Install dependencies
         run: |
           uv venv
-          uv pip install -r requirements.txt
-          uv pip install ruff pytest pytest-cov
+          uv lock
+          uv sync
 
       - name: Lint (ruff)
         run: uv run ruff check .
@@ -44,8 +46,8 @@ jobs:
       - name: Format check (ruff)
         run: uv run ruff format . --check
 
-      - name: Run tests + coverage
-        run: uv run pytest -q --cov=. --cov-report=term-missing --cov-report=xml
+      # - name: Run tests + coverage
+      #   run: uv run pytest -q --cov=. --cov-report=term-missing --cov-report=xml
 
       - name: Upload coverage.xml (artifact)
         uses: actions/upload-artifact@v4

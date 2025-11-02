@@ -11,6 +11,12 @@ myvenv/
 # pyenv
 .python-version
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
