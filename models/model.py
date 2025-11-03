@@ -3,8 +3,6 @@
 from datetime import datetime
 
 import joblib
-import numpy as np
-import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from xgboost import XGBClassifier
@@ -107,42 +105,6 @@ class Modelo:
 
         joblib.dump(self.modelo, filepath)
         print(f"Modelo salvo em: {filepath}")
-
-    def load_model(self, filepath: str) -> BaseEstimator:
-        """
-        Carrega um modelo previamente treinado e salvo em arquivo .joblib.
-
-        Args:
-            filepath: Caminho do arquivo .joblib contendo o modelo treinado.
-
-        Returns:
-            Modelo carregado do arquivo.
-
-        Raises:
-            FileNotFoundError: Se o arquivo especificado não for encontrado.
-            pickle.UnpicklingError: Se houver erro ao desserializar o
-                arquivo .joblib.
-        """
-        self.modelo = joblib.load(filepath)
-        print(f"Modelo carregado de: {filepath}")
-        return self.modelo
-
-    def model_predict(self, features: pd.DataFrame | np.ndarray) -> np.ndarray:
-        """
-        Realiza previsões usando o modelo treinado.
-
-        Args:
-            features: Features para realizar previsões.
-
-        Returns:
-            Array com as previsões do modelo.
-
-        Raises:
-            ValueError: Se o modelo ainda não foi treinado.
-        """
-        if self.modelo is None:
-            raise ValueError("Modelo não foi treinado ainda.")
-        return self.modelo.predict(features)
 
     def train(self, test_size: float = 0.2, random_state: int = 42) -> None:
         """
