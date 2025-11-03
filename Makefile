@@ -1,4 +1,4 @@
-.PHONY: streamlit
+.PHONY: streamlit install install-uv check format tests test-ci run-ci
 
 
 ######################################
@@ -31,4 +31,10 @@ format:
 ######################################
 ## TESTS COMMANDS ##
 
-run-ci: check
+tests:
+	uv run pytest tests/ -v --cov=models --cov=entrypoints --cov-report=term-missing --cov-fail-under=80
+
+test-ci:
+	uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=80 --tb=short
+
+run-ci: check test-ci

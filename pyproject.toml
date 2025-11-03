@@ -18,6 +18,10 @@ dependencies = [
     "pytest == 8.4.2",
     "streamlit == 1.50.0",
     "ruff >= 0.14.1",
+    "scikit-learn>=1.7.2",
+    "xgboost>=3.1.1",
+    "joblib>=1.5.2",
+    "pytest-cov>=7.0.0",
 ]
 
 
@@ -84,3 +88,34 @@ line-ending = "auto"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402", "F401"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--cov=models",
+    "--cov=entrypoints",
+    "--cov-report=term-missing",
+    "--cov-fail-under=80",
+]
+
+[tool.coverage.run]
+source = ["models", "entrypoints"]
+omit = [
+    "*/tests/*",
+    "*/__init__.py",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
