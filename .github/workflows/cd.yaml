@@ -23,7 +23,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Install Python
-        run: uv python install 3.13.7
+        run: uv python install 3.11
 
       - name: Clean uv cache for CI
         run: uv cache prune --ci
@@ -82,7 +82,7 @@ jobs:
             ```
             
             ### Training Details
-            - Python version: 3.13.7
+            - Python version: 3.11
             - Framework: scikit-learn
             - Algorithm: Random Forest Classifier
             - Trained at: ${{ github.event.head_commit.timestamp }}

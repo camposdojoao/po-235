@@ -250,7 +250,7 @@ code in entrypoints/ → config in configs/ → run CD pipeline → serve via st
 
 ## Tecnologias Utilizadas
 
-- **Python 3.13.7**: Linguagem principal
+- **Python 3.11**: Linguagem principal
 - **UV**: Gerenciador de pacotes e ambientes
 - **Pyenv**: Gerenciador de versões Python
 - **Github**: Controle de versão
