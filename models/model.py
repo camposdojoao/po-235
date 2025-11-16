@@ -1,7 +1,5 @@
 """Módulo de treinamento de modelo Random Forest para classificação de vinhos."""
 
-from datetime import datetime
-
 import joblib
 from sklearn.base import BaseEstimator
 from sklearn.ensemble import RandomForestClassifier
@@ -54,12 +52,11 @@ class Modelo:
         """
         Salva o modelo treinado em arquivo .joblib.
 
-        Se filepath não for fornecido, gera automaticamente o nome do
-        arquivo baseado no tipo do modelo e timestamp.
+        Se filepath não for fornecido, salva como 'models/random_forest_model.joblib'.
 
         Args:
             filepath: Caminho do arquivo onde o modelo será salvo.
-                Se None, gera automaticamente baseado no tipo do modelo.
+                Se None, usa o caminho padrão.
 
         Raises:
             IOError: Se houver problemas ao escrever o arquivo no disco.
@@ -67,9 +64,7 @@ class Modelo:
                 diretório especificado.
         """
         if filepath is None:
-            model_name = type(self.modelo).__name__
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filepath = f"models/{model_name}_{timestamp}.joblib"
+            filepath = "models/random_forest_model.joblib"
 
         joblib.dump(self.modelo, filepath)
         print(f"Modelo salvo em: {filepath}")
