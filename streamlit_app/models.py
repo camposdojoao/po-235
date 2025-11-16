@@ -7,6 +7,7 @@ de entrada de dados e previsão usando Random Forest.
 
 import pandas as pd
 import streamlit as st
+from sklearn.base import BaseEstimator
 
 from streamlit_app.model_loader import ModelLoader, get_model_version
 
@@ -28,7 +29,7 @@ class Models:
         self.model_version = get_model_version()
         self.model = self._load_model()
 
-    def _load_model(self):
+    def _load_model(self) -> BaseEstimator | None:
         """
         Carrega o modelo Random Forest treinado do GitHub Releases.
 
@@ -45,11 +46,11 @@ class Models:
             loader = ModelLoader(model_version=self.model_version)
             # Atualiza a versão após o loader determinar qual é (pode ser a última)
             self.model_version = loader.model_version
-            
+
             # Informa qual versão foi carregada
             if self.model_version:
                 st.info(f"📦 Carregando modelo versão: **{self.model_version}**")
-            
+
             model = loader.load_model("random_forest_model.pkl")
             return model
         except Exception as e:
@@ -164,8 +165,8 @@ class Models:
 
                     if self.model is None:
                         st.error(
-                            "❌ Modelo não disponível. "
-                            "Não foi possível carregar o modelo para realizar a predição."
+                            "❌ Modelo não disponível. Não foi possível "
+                            "carregar o modelo para realizar a predição."
                         )
                     else:
                         # Preparar dados para predição

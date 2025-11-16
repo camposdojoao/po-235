@@ -69,8 +69,7 @@ class Modelo:
         """
         if self.X_test is None or self.y_test is None:
             raise ValueError(
-                "Dados de teste não disponíveis. "
-                "Execute o pré-processamento primeiro."
+                "Dados de teste não disponíveis. Execute o pré-processamento primeiro."
             )
 
         # Fazer predições no conjunto de teste
@@ -148,7 +147,7 @@ class Modelo:
             "performance": metrics,
         }
 
-        with open(filepath, "w") as f:
+        with Path(filepath).open("w") as f:
             json.dump(metadata, f, indent=2)
 
         print(f"Metadados salvos em: {filepath}")
@@ -183,7 +182,9 @@ class Modelo:
                 test_size=test_size, random_state=random_state
             )
         )
-        print(f"✓ Dados preparados: {len(self.X_train)} treino, {len(self.X_test)} teste")
+        print(
+            f"✓ Dados preparados: {len(self.X_train)} treino, {len(self.X_test)} teste"
+        )
 
         # Treina o modelo
         print("\n[2/4] Treinando modelo Random Forest...")

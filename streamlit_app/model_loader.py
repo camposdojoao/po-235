@@ -6,6 +6,7 @@ from pathlib import Path
 import joblib
 import requests
 import streamlit as st
+from sklearn.base import BaseEstimator
 
 
 class ModelLoader:
@@ -28,13 +29,13 @@ class ModelLoader:
         """
         self.repo_owner = repo_owner
         self.repo_name = repo_name
-        
+
         # Se versão não foi especificada, busca a última release
         if model_version is None:
             self.model_version = self._get_latest_release()
         else:
             self.model_version = model_version
-            
+
         self.cache_dir = Path(".model_cache")
         self.cache_dir.mkdir(exist_ok=True)
 
@@ -49,7 +50,7 @@ class ModelLoader:
             Exception: Se houver erro ao buscar a release.
         """
         url = f"https://api.github.com/repos/{self.repo_owner}/{self.repo_name}/releases/latest"
-        
+
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()
@@ -99,7 +100,7 @@ class ModelLoader:
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()
 
-                with open(cache_path, "wb") as f:
+                with cache_path.open("wb") as f:
                     f.write(response.content)
 
                 st.success(f"✓ Modelo {self.model_version} baixado com sucesso!")
@@ -110,7 +111,10 @@ class ModelLoader:
             ) from e
 
     @st.cache_resource
-    def load_model(_self, model_filename: str = "random_forest_model.pkl"):
+    def load_model(
+        _self,  # noqa: N805
+        model_filename: str = "random_forest_model.pkl",
+    ) -> BaseEstimator:
         """
         Carrega o modelo do cache local ou baixa do GitHub Releases.
 
@@ -143,7 +147,7 @@ def get_model_version() -> str | None:
 
     Permite configurar a versão do modelo via variável de ambiente
     MODEL_VERSION, útil para deploys no Streamlit Cloud.
-    
+
     Se a variável não estiver definida, retorna None para buscar
     automaticamente a última release.
 
@@ -151,4 +155,3 @@ def get_model_version() -> str | None:
         Versão do modelo (ex: 'v1.0.0') ou None para buscar automaticamente.
     """
     return os.getenv("MODEL_VERSION", None)
-
