@@ -2,82 +2,25 @@
 
 import pandas as pd
 import pytest
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 from models.model import Modelo
 
 
-def test_init_modelo_invalido() -> None:
+def test_init_modelo_random_forest() -> None:
     """
-    Testa a inicialização com nome de modelo inválido.
+    Testa a inicialização do modelo Random Forest.
 
-    Verifica se ValueError é lançado quando tentamos criar um modelo
-    com um nome que não está na lista de modelos disponíveis, e se
-    a mensagem de erro contém informações úteis.
-
-    Raises:
-        ValueError: Quando o nome do modelo não está disponível.
-
-    Asserts:
-        - A mensagem contém "não encontrado"
-        - A mensagem lista "random_forest" como opção disponível
-    """
-    with pytest.raises(ValueError) as exc_info:
-        Modelo("modelo_inexistente")
-
-    assert "não encontrado" in str(exc_info.value)
-    assert "random_forest" in str(exc_info.value)
-
-
-def test_selecionar_modelo_random_forest() -> None:
-    """
-    Testa a seleção e inicialização do modelo Random Forest.
-
-    Verifica se ao especificar "random_forest", o modelo correto é
-    instanciado com os parâmetros adequados, incluindo random_state
+    Verifica se o modelo Random Forest é corretamente instanciado
+    com os parâmetros adequados, incluindo random_state
     para reprodutibilidade.
 
     Asserts:
         - O modelo é uma instância de RandomForestClassifier
         - O random_state está configurado como 42
     """
-    modelo = Modelo("random_forest")
+    modelo = Modelo()
     assert isinstance(modelo.modelo, RandomForestClassifier)
-    assert modelo.modelo.random_state == 42
-
-
-def test_selecionar_modelo_xgboost() -> None:
-    """
-    Testa a seleção e inicialização do modelo XGBoost.
-
-    Verifica se ao especificar "xgboost", o modelo correto é
-    instanciado com os parâmetros adequados, incluindo random_state
-    para reprodutibilidade.
-
-    Asserts:
-        - O modelo é uma instância de XGBClassifier
-        - O random_state está configurado como 42
-    """
-    modelo = Modelo("xgboost")
-    assert isinstance(modelo.modelo, XGBClassifier)
-    assert modelo.modelo.random_state == 42
-
-
-def test_selecionar_modelo_gradient_boosting() -> None:
-    """
-    Testa a seleção e inicialização do modelo Gradient Boosting.
-
-    Verifica se ao especificar "gradient_boosting", o modelo correto é
-    instanciado com os parâmetros adequados, incluindo random_state
-    para reprodutibilidade.
-
-    Asserts:
-        - O modelo é uma instância de GradientBoostingClassifier
-        - O random_state está configurado como 42
-    """
-    modelo = Modelo("gradient_boosting")
-    assert isinstance(modelo.modelo, GradientBoostingClassifier)
     assert modelo.modelo.random_state == 42
 
 
@@ -95,7 +38,7 @@ def test_apply_model_sem_dados() -> None:
     Asserts:
         - A mensagem de erro contém "não foram preparados"
     """
-    modelo = Modelo("random_forest")
+    modelo = Modelo()
 
     with pytest.raises(ValueError) as exc_info:
         modelo.apply_model()
@@ -121,7 +64,7 @@ def test_apply_model_com_dados(
         - O modelo possui o método predict
     """
     X, y = prepared_train_data  # noqa: N806
-    modelo = Modelo("random_forest")
+    modelo = Modelo()
 
     modelo.X_train = X
     modelo.y_train = y

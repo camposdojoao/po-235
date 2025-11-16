@@ -49,15 +49,17 @@ O projeto utiliza o **Wine Quality Dataset** disponibilizado pela UCI Machine Le
 
 ## 🤖 Metodologia
 
-### Modelos Avaliados
+### Modelo Utilizado
 
-Durante o desenvolvimento do projeto, três algoritmos de ensemble learning foram testados e comparados:
+O projeto utiliza o algoritmo **Random Forest** para classificação da qualidade de vinhos:
 
-- **Random Forest** ✅ (Modelo selecionado)
-- **XGBoost**
-- **Gradient Boosting**
+- **Random Forest** ✅ 
+  - Modelo robusto e interpretável
+  - Excelente desempenho em dados tabulares
+  - Resistente a overfitting
+  - Fornece importância das features
 
-Após análise comparativa de performance, métricas de avaliação e interpretabilidade, o **Random Forest** foi escolhido como modelo final para o projeto.
+Durante o desenvolvimento inicial, outros algoritmos (XGBoost e Gradient Boosting) foram avaliados, mas o **Random Forest** foi escolhido como modelo final após análise comparativa de performance, métricas de avaliação e interpretabilidade.
 
 ### Abordagem
 
@@ -71,8 +73,7 @@ Após análise comparativa de performance, métricas de avaliação e interpreta
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.13.7**: Linguagem principal do projeto
-- **scikit-learn**: Implementação de modelos de machine learning
-- **XGBoost**: Biblioteca de gradient boosting
+- **scikit-learn**: Implementação do Random Forest e pipeline de ML
 - **pandas & numpy**: Manipulação e análise de dados
 - **matplotlib & seaborn**: Visualização de dados
 - **Streamlit**: Interface web interativa
