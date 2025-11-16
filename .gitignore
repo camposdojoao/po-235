@@ -45,3 +45,6 @@ models/*.pkl
 models/*.joblib
 models/model_metadata.json
 .model_cache/
+
+# Streamlit
+.streamlit/secrets.toml
