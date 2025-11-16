@@ -1,67 +1,35 @@
-"""Módulo de treinamento de modelos de classificação de vinhos."""
+"""Módulo de treinamento de modelo Random Forest para classificação de vinhos."""
 
 from datetime import datetime
 
 import joblib
 from sklearn.base import BaseEstimator
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from xgboost import XGBClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 from models.preprocessing import Preprocessing
 
 
 class Modelo:
     """
-    Classe para treinamento e gerenciamento de modelo de classificação.
+    Classe para treinamento e gerenciamento do modelo Random Forest.
 
     Utiliza a classe Preprocessing para preparar os dados e realiza o
-    treinamento e salvamento do modelo de machine learning.
+    treinamento e salvamento do modelo Random Forest.
     """
 
-    # Lista de modelos disponíveis
-    modelos = ["random_forest", "xgboost", "gradient_boosting"]
-
-    def __init__(self, variavel: str) -> None:
+    def __init__(self) -> None:
         """
-        Inicializa a classe Modelo com o tipo de modelo desejado.
+        Inicializa a classe Modelo com Random Forest.
 
-        Args:
-            variavel: Nome do modelo a ser utilizado.
-                Opções: 'random_forest', 'xgboost', 'gradient_boosting'.
-
-        Raises:
-            ValueError: Se o modelo especificado não estiver disponível.
+        Configura o preprocessamento e inicializa o modelo Random Forest
+        com random_state=42 para reprodutibilidade.
         """
-        if variavel not in self.modelos:
-            raise ValueError(
-                f"Modelo '{variavel}' não encontrado. "
-                f"Modelos disponíveis: {self.modelos}"
-            )
-
         self.preprocessing = Preprocessing()
-        self.modelo = self._selecionar_modelo(variavel)
+        self.modelo = RandomForestClassifier(random_state=42)
         self.X_train = None
         self.X_test = None
         self.y_train = None
         self.y_test = None
-
-    def _selecionar_modelo(self, variavel: str) -> BaseEstimator:
-        """
-        Seleciona e retorna a instância do modelo baseado no nome fornecido.
-
-        Args:
-            variavel: Nome do modelo a ser selecionado.
-
-        Returns:
-            Instância do modelo de machine learning.
-        """
-        if variavel == "random_forest":
-            return RandomForestClassifier(random_state=42)
-        elif variavel == "xgboost":
-            return XGBClassifier(random_state=42)
-        elif variavel == "gradient_boosting":
-            return GradientBoostingClassifier(random_state=42)
-        return RandomForestClassifier(random_state=42)
 
     def apply_model(self) -> BaseEstimator:
         """

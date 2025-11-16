@@ -1,9 +1,8 @@
 """
-Aplicação principal Streamlit para visualização de modelos de Machine Learning.
+Aplicação principal Streamlit para previsão de qualidade de vinhos.
 
-Este módulo serve como ponto de entrada para a aplicação Streamlit, gerenciando
-a navegação entre diferentes views e renderizando os componentes principais da
-interface (sidebar e modelos).
+Este módulo serve como ponto de entrada para a aplicação Streamlit,
+renderizando a interface de classificação com Random Forest.
 """
 
 import sys
@@ -14,16 +13,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 import streamlit as st
 
 from streamlit_app.models import Models
-from streamlit_app.sidebar import Sidebar
 
-if "view" not in st.session_state:
-    st.session_state["view"] = "models"
+st.set_page_config(page_title="Wine Quality Prediction", page_icon="🍷", layout="wide")
 
-view = st.session_state.get("view", "models")
-
-Sidebar().render()
-
-if view == "models":
-    Models().render()
-# elif view == "dashboards":
-#     Dashboard().render()
+Models().render()
