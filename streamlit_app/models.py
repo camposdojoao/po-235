@@ -1,8 +1,8 @@
 """
-Módulo responsável pela visualização dos modelos de Machine Learning.
+Módulo responsável pela visualização do modelo de Machine Learning.
 
-Este módulo contém a classe Models que gerencia a exibição das abas
-de diferentes modelos de ML (Random Forest, XGBoost, Gradient Boost).
+Este módulo contém a classe Models que gerencia a exibição do formulário
+de entrada de dados e previsão usando Random Forest.
 """
 
 import streamlit as st
@@ -13,15 +13,13 @@ class Models:
         """
         Inicializa a view de Modelos com configuração padrão.
 
-        Configura o título de exibição e altura dos gráficos para a
-        interface de visualização de modelos de Machine Learning.
+        Configura o título de exibição para a interface de previsão
+        de qualidade de vinhos usando Random Forest.
 
         Attributes:
-            title (str): Título da página de modelos.
-            chart_height (int): Altura dos gráficos em pixels.
+            title (str): Título da página.
         """
-        self.title = "Modelos"
-        self.chart_height = 500
+        self.title = "Classificação de Qualidade de Vinhos"
 
     def _load_data(self) -> None:
         """
@@ -35,25 +33,21 @@ class Models:
         """
         pass
 
-    def _render_form(self, modelo_nome: str) -> None:
+    def _render_form(self) -> None:
         """
-        Renderiza o formulário de entrada de dados para um modelo específico.
-
-        Args:
-            modelo_nome (str): Nome do modelo de ML selecionado.
+        Renderiza o formulário de entrada de dados para o Random Forest.
 
         Returns:
             None
         """
-        st.header("Dados obrigatórios:", divider="yellow")
+        st.header("Dados obrigatórios:", divider="yellow", width='content')
 
         st.warning(
             "Estes são os dados mínimos para fazer a classificação.\n"
             "Para ter um melhor desempenho, preencha todos os campos."
         )
 
-        with st.form(key=f"form_{modelo_nome}"):
-            # Campos obrigatórios
+        with st.form(key="form_random_forest_mandatory"):
             col_1, col_2, col_3 = st.columns(3)
 
             with col_1:
@@ -98,10 +92,10 @@ class Models:
                     help="Campo obrigatório"
                 )
 
-            st.divider()
-            st.subheader("Campos adicionais (opcionais)")
+            st.header("Campos opcionais:", divider="yellow", width='content')
 
-            # Campos opcionais
+        # with st.form(key="form_random_forest_opcional"):
+
             col_4, col_5, col_6 = st.columns(3)
 
             with col_4:
@@ -144,7 +138,7 @@ class Models:
             submitted = st.form_submit_button("Classificar", type="primary")
 
             if submitted:
-                # Validação dos campos obrigatórios
+
                 campos_vazios = []
                 if volatile_acidity == 0.0:
                     campos_vazios.append("Volatile Acidity")
@@ -166,9 +160,8 @@ class Models:
                     )
                 else:
                     st.success("✅ Todos os campos obrigatórios foram preenchidos!")
-                    st.info(f"Processando classificação com {modelo_nome}...")
+                    st.info("Processando classificação com Random Forest...")
                     
-                    # Preparar dados para classificação
                     dados = {
                         "fixed acidity": fixed_acidity,
                         "volatile acidity": volatile_acidity,
@@ -182,32 +175,17 @@ class Models:
                         "sulphates": sulphates,
                         "alcohol": alcohol
                     }
-                    # Aqui você pode adicionar a lógica de classificação
-                    # resultado = modelo.predict([list(dados.values())])
+
 
     def render(self) -> None:
         """
-        Renderiza a interface de visualização dos modelos.
+        Renderiza a interface de previsão com Random Forest.
 
-        Cria e exibe os radio buttons para os diferentes modelos de Machine Learning
-        (Random Forest, XGBoost, Gradient Boost) na interface Streamlit.
+        Exibe o título e o formulário de entrada de dados para realizar
+        a classificação da qualidade do vinho usando Random Forest.
 
         Returns:
             None
         """
         st.title(self.title, anchor=False)
-
-        modelo_selecionado = st.radio(
-            "Selecione o modelo:",
-            ["Random Forest", "XGBoost", "Gradient Boost"],
-            horizontal=True
-        )
-
-        if modelo_selecionado == "Random Forest":
-            self._render_form("Random Forest")
-
-        elif modelo_selecionado == "XGBoost":
-            self._render_form("XGBoost")
-
-        elif modelo_selecionado == "Gradient Boost":
-            self._render_form("Gradient Boost")
+        self._render_form()
