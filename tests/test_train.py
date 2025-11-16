@@ -7,7 +7,7 @@ def test_train_executa_sem_erros(train_mocks: dict[str, object]) -> None:  # noq
 
     Verifica se a função main() do entrypoint train.py pode ser executada
     sem lançar exceções, garantindo que o pipeline de treinamento está
-    funcional e pode ser iniciado com um tipo de modelo válido.
+    funcional e pode ser iniciado.
 
     Args:
         train_mocks: Dicionário com mocks configurados para o modelo (fixture).
@@ -22,4 +22,4 @@ def test_train_executa_sem_erros(train_mocks: dict[str, object]) -> None:  # noq
     """
     from entrypoints.train import main
 
-    main("random_forest")
+    main()

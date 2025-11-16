@@ -171,40 +171,25 @@ def streamlit_mocks() -> Generator[dict[str, object]]:
     """
     Configura mocks para Streamlit e seus componentes.
 
-    Cria mocks para os componentes principais do Streamlit (session_state,
-    Models e Sidebar) permitindo testar o entrypoint sem inicializar
-    o servidor Streamlit real.
+    Cria mocks para os componentes principais do Streamlit (Models)
+    permitindo testar o entrypoint sem inicializar o servidor Streamlit real.
 
     Yields:
         Dicionário contendo os mocks configurados:
-        - session_state: Mock do estado da sessão Streamlit
         - MockModels: Mock da classe Models
-        - MockSidebar: Mock da classe Sidebar
-        - sidebar_instance: Instância mockada do Sidebar
         - models_instance: Instância mockada do Models
 
     Note:
-        O mock de session_state é configurado com view="models" por padrão.
         Todos os mocks são automaticamente limpos após o teste.
     """
-    mock_session_state = {"view": "models"}
+    with patch("streamlit_app.models.Models") as mock_models:  # noqa: N806
+        mock_models_instance = MagicMock()
+        mock_models.return_value = mock_models_instance
 
-    with patch("streamlit.session_state", mock_session_state):
-        with patch("streamlit_app.models.Models") as mock_models:  # noqa: N806
-            with patch("streamlit_app.sidebar.Sidebar") as mock_sidebar:  # noqa: N806
-                mock_sidebar_instance = MagicMock()
-                mock_sidebar.return_value = mock_sidebar_instance
-
-                mock_models_instance = MagicMock()
-                mock_models.return_value = mock_models_instance
-
-                yield {
-                    "session_state": mock_session_state,
-                    "MockModels": mock_models,
-                    "MockSidebar": mock_sidebar,
-                    "sidebar_instance": mock_sidebar_instance,
-                    "models_instance": mock_models_instance,
-                }
+        yield {
+            "MockModels": mock_models,
+            "models_instance": mock_models_instance,
+        }
 
 
 @pytest.fixture

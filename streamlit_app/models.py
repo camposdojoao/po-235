@@ -18,19 +18,29 @@ class Models:
 
         Attributes:
             title (str): Título da página.
+            model: Modelo Random Forest carregado (será carregado das GitHub Releases).
         """
         self.title = "Classificação de Qualidade de Vinhos"
+        self.model = None  # Será carregado das GitHub Releases
+        self._load_model()
 
-    def _load_data(self) -> None:
+    def _load_model(self) -> None:
         """
-        Carrega os dados necessários para os modelos.
+        Carrega o modelo Random Forest treinado.
 
-        Método placeholder para carregar dados dos modelos de ML.
-        Atualmente não implementado.
+        TODO: Implementar carregamento do modelo versionado via GitHub Releases.
+        O modelo será baixado da última release do repositório e carregado
+        usando joblib ou pickle.
 
         Returns:
             None
         """
+        # TODO: Implementar carregamento do modelo das GitHub Releases
+        # Exemplo:
+        # from models.inferences import Inferences
+        # inference = Inferences()
+        # model_path = download_model_from_github_release(version="latest")
+        # self.model = inference.load_model(model_path)
         pass
 
     def _render_form(self) -> None:
@@ -40,7 +50,7 @@ class Models:
         Returns:
             None
         """
-        st.header("Dados obrigatórios:", divider="yellow", width='content')
+        st.header("Dados obrigatórios:", divider="yellow", width="content")
 
         st.warning(
             "Estes são os dados mínimos para fazer a classificação.\n"
@@ -55,27 +65,21 @@ class Models:
                     "Volatile Acidity *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório"
+                    help="Campo obrigatório",
                 )
                 density = st.number_input(
-                    "Density *",
-                    min_value=0.0,
-                    format="%.4f",
-                    help="Campo obrigatório"
+                    "Density *", min_value=0.0, format="%.4f", help="Campo obrigatório"
                 )
 
             with col_2:
                 alcohol = st.number_input(
-                    "Alcohol *",
-                    min_value=0.0,
-                    format="%.2f",
-                    help="Campo obrigatório"
+                    "Alcohol *", min_value=0.0, format="%.2f", help="Campo obrigatório"
                 )
                 total_sulfur_dioxide = st.number_input(
                     "Total Sulfur Dioxide *",
                     min_value=0.0,
                     format="%.2f",
-                    help="Campo obrigatório"
+                    help="Campo obrigatório",
                 )
 
             with col_3:
@@ -83,62 +87,43 @@ class Models:
                     "Chlorides *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório"
+                    help="Campo obrigatório",
                 )
                 sulphates = st.number_input(
                     "Sulphates *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório"
+                    help="Campo obrigatório",
                 )
 
-            st.header("Campos opcionais:", divider="yellow", width='content')
-
-        # with st.form(key="form_random_forest_opcional"):
+            st.header("Campos opcionais:", divider="yellow", width="content")
 
             col_4, col_5, col_6 = st.columns(3)
 
             with col_4:
                 fixed_acidity = st.number_input(
-                    "Fixed Acidity",
-                    min_value=0.0,
-                    value=0.0,
-                    format="%.2f"
+                    "Fixed Acidity", min_value=0.0, value=0.0, format="%.2f"
                 )
                 citric_acid = st.number_input(
-                    "Citric Acid",
-                    min_value=0.0,
-                    value=0.0,
-                    format="%.2f"
+                    "Citric Acid", min_value=0.0, value=0.0, format="%.2f"
                 )
 
             with col_5:
                 residual_sugar = st.number_input(
-                    "Residual Sugar",
-                    min_value=0.0,
-                    value=0.0,
-                    format="%.2f"
+                    "Residual Sugar", min_value=0.0, value=0.0, format="%.2f"
                 )
                 free_sulfur_dioxide = st.number_input(
-                    "Free Sulfur Dioxide",
-                    min_value=0.0,
-                    value=0.0,
-                    format="%.1f"
+                    "Free Sulfur Dioxide", min_value=0.0, value=0.0, format="%.1f"
                 )
 
             with col_6:
                 ph = st.number_input(
-                    "pH",
-                    min_value=0.0,
-                    max_value=14.0,
-                    value=0.0,
-                    format="%.2f"
+                    "pH", min_value=0.0, max_value=14.0, value=0.0, format="%.2f"
                 )
 
             submitted = st.form_submit_button("Classificar", type="primary")
 
             if submitted:
-
                 campos_vazios = []
                 if volatile_acidity == 0.0:
                     campos_vazios.append("Volatile Acidity")
@@ -160,22 +145,33 @@ class Models:
                     )
                 else:
                     st.success("✅ Todos os campos obrigatórios foram preenchidos!")
-                    st.info("Processando classificação com Random Forest...")
-                    
-                    dados = {
-                        "fixed acidity": fixed_acidity,
-                        "volatile acidity": volatile_acidity,
-                        "citric acid": citric_acid,
-                        "residual sugar": residual_sugar,
-                        "chlorides": chlorides,
-                        "free sulfur dioxide": free_sulfur_dioxide,
-                        "total sulfur dioxide": total_sulfur_dioxide,
-                        "density": density,
-                        "pH": ph,
-                        "sulphates": sulphates,
-                        "alcohol": alcohol
-                    }
 
+                    if self.model is None:
+                        st.warning(
+                            "⚠️ Modelo não carregado. "
+                            "O modelo será baixado automaticamente das "
+                            "GitHub Releases na próxima versão."
+                        )
+                    else:
+                        st.info("Processando classificação com Random Forest...")
+
+                        # TODO: Implementar predição quando modelo estiver carregado
+                        # import pandas as pd
+                        # dados = pd.DataFrame([{
+                        #     "fixed acidity": fixed_acidity,
+                        #     "volatile acidity": volatile_acidity,
+                        #     "citric acid": citric_acid,
+                        #     "residual sugar": residual_sugar,
+                        #     "chlorides": chlorides,
+                        #     "free sulfur dioxide": free_sulfur_dioxide,
+                        #     "total sulfur dioxide": total_sulfur_dioxide,
+                        #     "density": density,
+                        #     "pH": ph,
+                        #     "sulphates": sulphates,
+                        #     "alcohol": alcohol,
+                        # }])
+                        # resultado = self.model.predict(dados)
+                        # st.success(f"🍷 Qualidade prevista: {resultado[0]}")
 
     def render(self) -> None:
         """

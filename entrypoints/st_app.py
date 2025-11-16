@@ -14,10 +14,6 @@ import streamlit as st
 
 from streamlit_app.models import Models
 
-st.set_page_config(
-    page_title="Wine Quality Prediction",
-    page_icon="🍷",
-    layout="wide"
-)
+st.set_page_config(page_title="Wine Quality Prediction", page_icon="🍷", layout="wide")
 
 Models().render()
