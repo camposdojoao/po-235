@@ -37,22 +37,26 @@ jobs:
         run: |
           uv run python entrypoints/train.py
           echo "Model training completed"
-          echo "Model saved at:"
+          echo ""
+          echo "Generated files:"
           ls -lh models/random_forest_model.joblib
+          ls -lh models/model_metadata.json
 
-      - name: Rename model for release
+      - name: Prepare release artifacts
         run: |
           # Copy .joblib to .pkl for release compatibility
           cp "models/random_forest_model.joblib" "models/random_forest_model.pkl"
           
-          echo "Model prepared for release:"
+          echo "Artifacts prepared for release:"
           ls -lh models/random_forest_model.pkl
+          ls -lh models/model_metadata.json
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             models/random_forest_model.pkl
+            models/model_metadata.json
           body: |
             ## 🍷 Wine Quality Prediction Model ${{ github.ref_name }}
             
@@ -91,5 +95,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: model-${{ github.ref_name }}
-          path: models/random_forest_model.pkl
+          path: |
+            models/random_forest_model.pkl
+            models/model_metadata.json
           retention-days: 30

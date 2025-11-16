@@ -43,3 +43,5 @@ coverage.xml
 *.joblib
 models/*.pkl
 models/*.joblib
+models/model_metadata.json
+.model_cache/
