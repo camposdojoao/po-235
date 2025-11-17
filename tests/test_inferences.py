@@ -1,4 +1,4 @@
-"""Testes unitários para o módulo de inferências."""
+"""Unit tests for the inferences module."""
 
 from pathlib import Path
 
@@ -12,18 +12,18 @@ from models.inferences import Inferences
 
 def test_load_model(trained_model_path: Path) -> None:
     """
-    Testa o carregamento de um modelo treinado a partir de arquivo.
+    Test loading a trained model from a file.
 
-    Verifica se o modelo é carregado corretamente do arquivo .joblib
-    e se é atribuído corretamente ao atributo da instância.
+    Verifies that the model is correctly loaded from the .joblib file
+    and is properly assigned to the instance attribute.
 
     Args:
-        trained_model_path: Caminho para o arquivo de modelo treinado (fixture).
+        trained_model_path: Path to the trained model file (fixture).
 
     Asserts:
-        - O modelo carregado não é None
-        - O atributo modelo da instância não é None
-        - O modelo carregado é uma instância de RandomForestClassifier
+        - The loaded model is not None
+        - The instance's modelo attribute is not None
+        - The loaded model is an instance of RandomForestClassifier
     """
     inference = Inferences()
     loaded_model = inference.load_model(str(trained_model_path))
@@ -35,13 +35,13 @@ def test_load_model(trained_model_path: Path) -> None:
 
 def test_load_model_arquivo_inexistente() -> None:
     """
-    Testa o comportamento ao tentar carregar modelo de arquivo inexistente.
+    Test behavior when trying to load model from non-existent file.
 
-    Verifica se FileNotFoundError é lançado quando tentamos carregar
-    um modelo de um caminho que não existe.
+    Verifies that FileNotFoundError is raised when we try to load
+    a model from a path that does not exist.
 
     Raises:
-        FileNotFoundError: Quando o arquivo especificado não existe.
+        FileNotFoundError: When the specified file does not exist.
     """
     inference = Inferences()
 
@@ -51,19 +51,19 @@ def test_load_model_arquivo_inexistente() -> None:
 
 def test_model_predict(sample_features: pd.DataFrame, trained_model_path: Path) -> None:
     """
-    Testa a realização de predições com dados válidos.
+    Test making predictions with valid data.
 
-    Verifica se o modelo consegue fazer predições após ser carregado
-    e se retorna um array numpy com o tamanho correto.
+    Verifies that the model can make predictions after being loaded
+    and returns a numpy array with the correct size.
 
     Args:
-        sample_features: DataFrame com features de exemplo (fixture).
-        trained_model_path: Caminho para o arquivo de modelo treinado (fixture).
+        sample_features: DataFrame with sample features (fixture).
+        trained_model_path: Path to the trained model file (fixture).
 
     Asserts:
-        - As predições não são None
-        - As predições são um array numpy
-        - O número de predições corresponde ao número de amostras de entrada
+        - The predictions are not None
+        - The predictions are a numpy array
+        - The number of predictions matches the number of input samples
     """
     inference = Inferences()
     inference.load_model(str(trained_model_path))
@@ -76,44 +76,44 @@ def test_model_predict(sample_features: pd.DataFrame, trained_model_path: Path) 
 
 def test_model_predict_sem_modelo() -> None:
     """
-    Testa o comportamento ao tentar fazer predição sem carregar modelo.
+    Test behavior when trying to make prediction without loading model.
 
-    Verifica se ValueError é lançado com mensagem apropriada quando
-    tentamos fazer predições sem ter carregado um modelo previamente.
+    Verifies that ValueError is raised with an appropriate message when
+    we try to make predictions without having loaded a model beforehand.
 
     Raises:
-        ValueError: Quando o modelo não foi carregado antes da predição.
+        ValueError: When the model has not been loaded before prediction.
 
     Asserts:
-        - A mensagem de erro contém "não foi carregado"
+        - The error message contains "not loaded"
     """
     inference = Inferences()
 
     with pytest.raises(ValueError) as exc_info:
         inference.model_predict(pd.DataFrame({"col1": [1, 2, 3]}))
 
-    assert "não foi carregado" in str(exc_info.value)
+    assert "not loaded" in str(exc_info.value)
 
 
 def test_model_predict_valores_validos(
     sample_features: pd.DataFrame, trained_model_path: Path
 ) -> None:
     """
-    Testa se as predições retornam apenas valores válidos de classificação.
+    Test if predictions return only valid classification values.
 
-    Verifica se todas as predições do modelo estão dentro do conjunto
-    esperado de classes {0, 1, 2}, que representam as categorias de
-    qualidade do vinho (Ruim, Média, Boa).
+    Verifies that all model predictions are within the expected
+    set of classes {0, 1, 2}, which represent wine quality
+    categories (Poor, Average, Good).
 
     Args:
-        sample_features: DataFrame com features de exemplo (fixture).
-        trained_model_path: Caminho para o arquivo de modelo treinado (fixture).
+        sample_features: DataFrame with sample features (fixture).
+        trained_model_path: Path to the trained model file (fixture).
 
     Asserts:
-        - Todas as predições pertencem ao conjunto {0, 1, 2}
+        - All predictions belong to the set {0, 1, 2}
 
     Raises:
-        AssertionError: Se houver predições fora do conjunto válido.
+        AssertionError: If there are predictions outside the valid set.
     """
     inference = Inferences()
     inference.load_model(str(trained_model_path))
@@ -121,5 +121,5 @@ def test_model_predict_valores_validos(
 
     unique_predictions = set(predictions)
     assert unique_predictions.issubset({0, 1, 2}), (
-        f"Predições devem ser 0, 1 ou 2, mas obteve: {unique_predictions}"
+        f"Predictions must be 0, 1, or 2, but got: {unique_predictions}"
     )

@@ -1,4 +1,4 @@
-"""Entrypoint para treinamento do modelo Random Forest de classificação de vinhos."""
+"""Entrypoint for training the Random Forest wine classification model."""
 
 import sys
 from pathlib import Path
@@ -10,16 +10,16 @@ from models.model import Modelo
 
 def main() -> None:
     """
-    Executa o treinamento do modelo Random Forest.
+    Execute the Random Forest model training.
 
     Raises:
-        Exception: Se houver erro durante o treinamento.
+        Exception: If there is an error during training.
     """
     try:
         model = Modelo()
         model.train()
     except Exception as e:
-        raise Exception(f"Erro durante o treinamento: {str(e)}") from e
+        raise Exception(f"Error during training: {str(e)}") from e
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-"""Módulo de treinamento de modelo Random Forest para classificação de vinhos."""
+"""Random Forest model training module for wine classification."""
 
 import json
 from datetime import datetime
@@ -14,18 +14,18 @@ from models.preprocessing import Preprocessing
 
 class Modelo:
     """
-    Classe para treinamento e gerenciamento do modelo Random Forest.
+    Class for training and managing the Random Forest model.
 
-    Utiliza a classe Preprocessing para preparar os dados e realiza o
-    treinamento e salvamento do modelo Random Forest.
+    Uses the Preprocessing class to prepare data and performs
+    training and saving of the Random Forest model.
     """
 
     def __init__(self) -> None:
         """
-        Inicializa a classe Modelo com Random Forest.
+        Initialize the Modelo class with Random Forest.
 
-        Configura o preprocessamento e inicializa o modelo Random Forest
-        com random_state=42 para reprodutibilidade.
+        Configures preprocessing and initializes the Random Forest model
+        with random_state=42 for reproducibility.
         """
         self.preprocessing = Preprocessing()
         self.modelo = RandomForestClassifier(random_state=42)
@@ -36,41 +36,36 @@ class Modelo:
 
     def apply_model(self) -> BaseEstimator:
         """
-        Treina o modelo de machine learning com os dados de treino.
+        Train the machine learning model with the training data.
 
         Returns:
-            Modelo treinado.
+            Trained model.
 
         Raises:
-            ValueError: Se houver problemas com os dados de treino
-                (ex: valores faltantes, tipos incompatíveis).
+            ValueError: If there are problems with the training data
+                (e.g., missing values, incompatible types).
         """
         if self.X_train is None or self.y_train is None:
-            raise ValueError(
-                "Dados de treino não foram preparados. "
-                "Execute o pré-processamento primeiro."
-            )
+            raise ValueError("Training data not prepared. Execute preprocessing first.")
         self.modelo.fit(self.X_train, self.y_train)
         return self.modelo
 
     def evaluate_model(self) -> dict:
         """
-        Avalia o modelo treinado usando o conjunto de teste.
+        Evaluate the trained model using the test set.
 
-        Calcula métricas de performance incluindo accuracy, f1-score
-        e classification report detalhado.
+        Calculates performance metrics including accuracy, f1-score,
+        and detailed classification report.
 
         Returns:
-            Dicionário contendo as métricas de avaliação.
+            Dictionary containing evaluation metrics.
 
         Raises:
-            ValueError: Se o modelo não foi treinado ou dados de teste
-                não estão disponíveis.
+            ValueError: If the model was not trained or test data
+                is not available.
         """
         if self.X_test is None or self.y_test is None:
-            raise ValueError(
-                "Dados de teste não disponíveis. Execute o pré-processamento primeiro."
-            )
+            raise ValueError("Test data not available. Execute preprocessing first.")
 
         # Fazer predições no conjunto de teste
         y_pred = self.modelo.predict(self.X_test)
@@ -92,18 +87,18 @@ class Modelo:
 
     def save_model(self, filepath: str | None = None) -> None:
         """
-        Salva o modelo treinado em arquivo .joblib.
+        Save the trained model to a .joblib file.
 
-        Se filepath não for fornecido, salva como 'models/random_forest_model.joblib'.
+        If filepath is not provided, saves as 'models/random_forest_model.joblib'.
 
         Args:
-            filepath: Caminho do arquivo onde o modelo será salvo.
-                Se None, usa o caminho padrão.
+            filepath: Path to the file where the model will be saved.
+                If None, uses the default path.
 
         Raises:
-            IOError: Se houver problemas ao escrever o arquivo no disco.
-            PermissionError: Se não houver permissão de escrita no
-                diretório especificado.
+            IOError: If there are problems writing the file to disk.
+            PermissionError: If there is no write permission in the
+                specified directory.
         """
         if filepath is None:
             filepath = "models/random_forest_model.joblib"
@@ -115,14 +110,14 @@ class Modelo:
         self, metrics: dict, filepath: str = "models/model_metadata.json"
     ) -> None:
         """
-        Salva metadados do modelo em arquivo JSON.
+        Save model metadata to a JSON file.
 
         Args:
-            metrics: Dicionário contendo métricas de avaliação do modelo.
-            filepath: Caminho onde o arquivo JSON será salvo.
+            metrics: Dictionary containing model evaluation metrics.
+            filepath: Path where the JSON file will be saved.
 
         Raises:
-            IOError: Se houver problemas ao escrever o arquivo no disco.
+            IOError: If there are problems writing the file to disk.
         """
         # Garantir que o diretório existe
         Path(filepath).parent.mkdir(parents=True, exist_ok=True)
@@ -154,22 +149,22 @@ class Modelo:
 
     def train(self, test_size: float = 0.2, random_state: int = 42) -> None:
         """
-        Executa o pipeline completo de treinamento do modelo.
+        Execute the complete model training pipeline.
 
-        O pipeline inclui:
-        1. Pré-processamento completo dos dados (leitura, concatenação,
-           categorização, feature selection e split)
-        2. Treinamento do modelo
-        3. Avaliação do modelo
-        4. Salvamento do modelo e metadados
+        The pipeline includes:
+        1. Complete data preprocessing (reading, concatenation,
+           categorization, feature selection, and split)
+        2. Model training
+        3. Model evaluation
+        4. Saving model and metadata
 
         Args:
-            test_size: Proporção dos dados para teste. Padrão é 0.2.
-            random_state: Seed para reprodutibilidade. Padrão é 42.
+            test_size: Proportion of data for testing. Default is 0.2.
+            random_state: Seed for reproducibility. Default is 42.
 
         Raises:
-            Exception: Qualquer exceção que possa ocorrer durante as
-                etapas do pipeline.
+            Exception: Any exception that may occur during the
+                pipeline steps.
         """
         print("=" * 60)
         print("Iniciando pipeline de treinamento")

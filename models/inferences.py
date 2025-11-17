@@ -1,4 +1,4 @@
-"""Módulo de inferência de modelos de classificação de vinhos."""
+"""Inference module for wine classification models."""
 
 import joblib
 import numpy as np
@@ -8,29 +8,29 @@ from sklearn.base import BaseEstimator
 
 class Inferences:
     """
-    Classe para realizar inferências com modelos treinados.
+    Class for performing inferences with trained models.
 
-    Gerencia o carregamento de modelos salvos e realiza predições.
+    Manages loading of saved models and performs predictions.
     """
 
     def __init__(self) -> None:
-        """Inicializa a classe Inferences."""
+        """Initialize the Inferences class."""
         self.modelo: BaseEstimator | None = None
 
     def load_model(self, filepath: str) -> BaseEstimator:
         """
-        Carrega um modelo previamente treinado e salvo em arquivo .joblib.
+        Load a previously trained model saved in a .joblib file.
 
         Args:
-            filepath: Caminho do arquivo .joblib contendo o modelo treinado.
+            filepath: Path to the .joblib file containing the trained model.
 
         Returns:
-            Modelo carregado do arquivo.
+            Model loaded from the file.
 
         Raises:
-            FileNotFoundError: Se o arquivo especificado não for encontrado.
-            pickle.UnpicklingError: Se houver erro ao desserializar o
-                arquivo .joblib.
+            FileNotFoundError: If the specified file is not found.
+            pickle.UnpicklingError: If there is an error deserializing the
+                .joblib file.
         """
         self.modelo = joblib.load(filepath)
         print(f"Modelo carregado de: {filepath}")
@@ -38,17 +38,17 @@ class Inferences:
 
     def model_predict(self, features: pd.DataFrame | np.ndarray) -> np.ndarray:
         """
-        Realiza previsões usando o modelo treinado.
+        Perform predictions using the trained model.
 
         Args:
-            features: Features para realizar previsões.
+            features: Features for making predictions.
 
         Returns:
-            Array com as previsões do modelo.
+            Array with model predictions.
 
         Raises:
-            ValueError: Se o modelo ainda não foi treinado.
+            ValueError: If the model has not been loaded yet.
         """
         if self.modelo is None:
-            raise ValueError("Modelo não foi carregado ainda.")
+            raise ValueError("Model not loaded yet.")
         return self.modelo.predict(features)

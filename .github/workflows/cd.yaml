@@ -3,10 +3,10 @@ name: CD - Model Release
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0, v2.0.0
+      - 'v*'
 
 permissions:
-  contents: write  # Required to create releases
+  contents: write
 
 jobs:
   train-and-release:
@@ -44,7 +44,6 @@ jobs:
 
       - name: Prepare release artifacts
         run: |
-          # Copy .joblib to .pkl for release compatibility
           cp "models/random_forest_model.joblib" "models/random_forest_model.pkl"
           
           echo "Artifacts prepared for release:"

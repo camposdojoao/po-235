@@ -1,4 +1,4 @@
-"""Testes unitários para o módulo de treinamento de modelos."""
+"""Unit tests for the model training module."""
 
 import json
 from pathlib import Path
@@ -12,15 +12,15 @@ from models.model import Modelo
 
 def test_init_modelo_random_forest() -> None:
     """
-    Testa a inicialização do modelo Random Forest.
+    Test Random Forest model initialization.
 
-    Verifica se o modelo Random Forest é corretamente instanciado
-    com os parâmetros adequados, incluindo random_state
-    para reprodutibilidade.
+    Verifies that the Random Forest model is correctly instantiated
+    with the appropriate parameters, including random_state
+    for reproducibility.
 
     Asserts:
-        - O modelo é uma instância de RandomForestClassifier
-        - O random_state está configurado como 42
+        - The model is an instance of RandomForestClassifier
+        - The random_state is configured as 42
     """
     modelo = Modelo()
     assert isinstance(modelo.modelo, RandomForestClassifier)
@@ -29,42 +29,42 @@ def test_init_modelo_random_forest() -> None:
 
 def test_apply_model_sem_dados() -> None:
     """
-    Testa o comportamento ao tentar treinar sem dados preparados.
+    Test behavior when trying to train without prepared data.
 
-    Verifica se ValueError é lançado com mensagem apropriada quando
-    tentamos treinar um modelo sem ter preparado os dados de treino
-    (X_train e y_train) previamente.
+    Verifies that ValueError is raised with an appropriate message when
+    we try to train a model without having prepared the training data
+    (X_train and y_train) beforehand.
 
     Raises:
-        ValueError: Quando os dados de treino não foram preparados.
+        ValueError: When training data has not been prepared.
 
     Asserts:
-        - A mensagem de erro contém "não foram preparados"
+        - The error message contains "not prepared"
     """
     modelo = Modelo()
 
     with pytest.raises(ValueError) as exc_info:
         modelo.apply_model()
 
-    assert "não foram preparados" in str(exc_info.value)
+    assert "not prepared" in str(exc_info.value)
 
 
 def test_apply_model_com_dados(
     prepared_train_data: tuple[pd.DataFrame, pd.Series],
 ) -> None:
     """
-    Testa o treinamento do modelo com dados válidos.
+    Test model training with valid data.
 
-    Verifica se o modelo é treinado com sucesso quando dados válidos
-    (X_train e y_train) são fornecidos, e se o modelo resultante
-    possui a capacidade de fazer predições.
+    Verifies that the model is successfully trained when valid data
+    (X_train and y_train) is provided, and that the resulting model
+    has the ability to make predictions.
 
     Args:
-        prepared_train_data: Tupla com (X, y) preparados (fixture).
+        prepared_train_data: Tuple with prepared (X, y) (fixture).
 
     Asserts:
-        - O modelo treinado não é None
-        - O modelo possui o método predict
+        - The trained model is not None
+        - The model has the predict method
     """
     X, y = prepared_train_data  # noqa: N806
     modelo = Modelo()
@@ -80,45 +80,45 @@ def test_apply_model_com_dados(
 
 def test_evaluate_model_sem_dados() -> None:
     """
-    Testa o comportamento ao tentar avaliar modelo sem dados de teste.
+    Test behavior when trying to evaluate model without test data.
 
-    Verifica se ValueError é lançado quando tentamos avaliar um modelo
-    sem ter preparado os dados de teste (X_test e y_test) previamente.
+    Verifies that ValueError is raised when we try to evaluate a model
+    without having prepared the test data (X_test and y_test) beforehand.
 
     Raises:
-        ValueError: Quando os dados de teste não estão disponíveis.
+        ValueError: When test data is not available.
 
     Asserts:
-        - A mensagem de erro contém "não disponíveis"
+        - The error message contains "not available"
     """
     modelo = Modelo()
 
     with pytest.raises(ValueError) as exc_info:
         modelo.evaluate_model()
 
-    assert "não disponíveis" in str(exc_info.value)
+    assert "not available" in str(exc_info.value)
 
 
 def test_evaluate_model_retorna_metricas(
     prepared_train_data: tuple[pd.DataFrame, pd.Series],
 ) -> None:
     """
-    Testa se evaluate_model retorna métricas de avaliação corretas.
+    Test if evaluate_model returns correct evaluation metrics.
 
-    Verifica se o método evaluate_model retorna um dicionário contendo
-    todas as métricas esperadas (accuracy, f1_score, classification_report)
-    após o modelo ser treinado com dados válidos.
+    Verifies that the evaluate_model method returns a dictionary containing
+    all expected metrics (accuracy, f1_score, classification_report)
+    after the model is trained with valid data.
 
     Args:
-        prepared_train_data: Tupla com (X, y) preparados (fixture).
+        prepared_train_data: Tuple with prepared (X, y) (fixture).
 
     Asserts:
-        - O retorno é um dicionário
-        - Contém chave "accuracy"
-        - Contém chave "f1_score_weighted"
-        - Contém chave "classification_report"
-        - accuracy é um float entre 0 e 1
-        - f1_score_weighted é um float entre 0 e 1
+        - The return is a dictionary
+        - Contains "accuracy" key
+        - Contains "f1_score_weighted" key
+        - Contains "classification_report" key
+        - accuracy is a float between 0 and 1
+        - f1_score_weighted is a float between 0 and 1
     """
     X, y = prepared_train_data  # noqa: N806
     modelo = Modelo()
@@ -147,17 +147,17 @@ def test_evaluate_model_retorna_metricas(
 
 def test_save_model_cria_arquivo(temp_model_path: Path) -> None:
     """
-    Testa se save_model cria arquivo no caminho especificado.
+    Test if save_model creates a file at the specified path.
 
-    Verifica se o método save_model cria corretamente um arquivo .joblib
-    no caminho fornecido e se esse arquivo existe após o salvamento.
+    Verifies that the save_model method correctly creates a .joblib file
+    at the provided path and that this file exists after saving.
 
     Args:
-        temp_model_path: Caminho temporário para salvar o modelo (fixture).
+        temp_model_path: Temporary path to save the model (fixture).
 
     Asserts:
-        - O arquivo é criado
-        - O arquivo existe no caminho especificado
+        - The file is created
+        - The file exists at the specified path
     """
     modelo = Modelo()
 
@@ -168,15 +168,15 @@ def test_save_model_cria_arquivo(temp_model_path: Path) -> None:
 
 def test_save_model_caminho_padrao() -> None:
     """
-    Testa se save_model usa caminho padrão quando filepath é None.
+    Test if save_model uses default path when filepath is None.
 
-    Verifica se o método save_model cria um arquivo com o nome padrão
-    'random_forest_model.joblib' na pasta 'models/' quando nenhum
-    caminho é fornecido.
+    Verifies that the save_model method creates a file with the default name
+    'random_forest_model.joblib' in the 'models/' folder when no
+    path is provided.
 
     Asserts:
-        - O método executa sem erros
-        - Não lança exceção
+        - The method executes without errors
+        - Does not raise an exception
     """
     modelo = Modelo()
 
@@ -192,23 +192,23 @@ def test_save_metadata_cria_json(
     tmp_path: Path, prepared_train_data: tuple[pd.DataFrame, pd.Series]
 ) -> None:
     """
-    Testa se save_metadata cria arquivo JSON com metadados corretos.
+    Test if save_metadata creates JSON file with correct metadata.
 
-    Verifica se o método save_metadata cria um arquivo JSON válido
-    contendo todas as informações esperadas sobre o modelo, treinamento
-    e performance.
+    Verifies that the save_metadata method creates a valid JSON file
+    containing all expected information about the model, training,
+    and performance.
 
     Args:
-        tmp_path: Diretório temporário fornecido pelo pytest.
-        prepared_train_data: Tupla com (X, y) preparados (fixture).
+        tmp_path: Temporary directory provided by pytest.
+        prepared_train_data: Tuple with prepared (X, y) (fixture).
 
     Asserts:
-        - O arquivo JSON é criado
-        - O arquivo existe no caminho especificado
-        - O JSON contém chave "model"
-        - O JSON contém chave "training"
-        - O JSON contém chave "performance"
-        - Os metadados de performance estão corretos
+        - The JSON file is created
+        - The file exists at the specified path
+        - The JSON contains "model" key
+        - The JSON contains "training" key
+        - The JSON contains "performance" key
+        - The performance metadata is correct
     """
     X, y = prepared_train_data  # noqa: N806
     modelo = Modelo()

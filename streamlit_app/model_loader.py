@@ -1,4 +1,4 @@
-"""Módulo para carregamento de modelos do GitHub Releases."""
+"""Module for loading models from GitHub Releases."""
 
 import os
 from pathlib import Path
@@ -10,7 +10,7 @@ from sklearn.base import BaseEstimator
 
 
 class ModelLoader:
-    """Classe para gerenciar download e cache de modelos do GitHub Releases."""
+    """Class for managing download and caching of models from GitHub Releases."""
 
     def __init__(
         self,
@@ -19,13 +19,13 @@ class ModelLoader:
         model_version: str | None = None,
     ) -> None:
         """
-        Inicializa o ModelLoader.
+        Initialize the ModelLoader.
 
         Args:
-            repo_owner: Nome do dono do repositório GitHub.
-            repo_name: Nome do repositório GitHub.
-            model_version: Versão do modelo a ser carregada (tag da release).
-                Se None, busca automaticamente a última release.
+            repo_owner: GitHub repository owner name.
+            repo_name: GitHub repository name.
+            model_version: Version of the model to load (release tag).
+                If None, automatically fetches the latest release.
         """
         self.repo_owner = repo_owner
         self.repo_name = repo_name
@@ -41,13 +41,13 @@ class ModelLoader:
 
     def _get_latest_release(self) -> str:
         """
-        Busca a tag da última release no GitHub.
+        Fetch the tag of the latest release on GitHub.
 
         Returns:
-            Tag da última release (ex: 'v1.0.0').
+            Tag of the latest release (e.g., 'v1.0.0').
 
         Raises:
-            Exception: Se houver erro ao buscar a release.
+            Exception: If there is an error fetching the release.
         """
         url = f"https://api.github.com/repos/{self.repo_owner}/{self.repo_name}/releases/latest"
 
@@ -57,25 +57,25 @@ class ModelLoader:
             latest_tag = response.json()["tag_name"]
             return latest_tag
         except requests.exceptions.RequestException as e:
-            # Se falhar, usa versão padrão
+            # If it fails, use default version
             st.warning(
-                f"⚠️ Não foi possível buscar a última release. "
-                f"Usando versão padrão v1.0.0.\nErro: {str(e)}"
+                f"⚠️ Unable to fetch the latest release. "
+                f"Using default version v1.0.0.\nError: {str(e)}"
             )
             return "v1.0.0"
         except KeyError:
-            st.warning("⚠️ Nenhuma release encontrada. Usando versão padrão v1.0.0.")
+            st.warning("⚠️ No release found. Using default version v1.0.0.")
             return "v1.0.0"
 
     def _get_model_url(self, model_filename: str) -> str:
         """
-        Constrói a URL para download do modelo do GitHub Releases.
+        Construct the URL for downloading the model from GitHub Releases.
 
         Args:
-            model_filename: Nome do arquivo do modelo.
+            model_filename: Model filename.
 
         Returns:
-            URL completa para download do modelo.
+            Complete URL for downloading the model.
         """
         return (
             f"https://github.com/{self.repo_owner}/{self.repo_name}/"
@@ -84,30 +84,30 @@ class ModelLoader:
 
     def _download_model(self, model_filename: str, cache_path: Path) -> None:
         """
-        Faz download do modelo do GitHub Releases.
+        Download the model from GitHub Releases.
 
         Args:
-            model_filename: Nome do arquivo do modelo.
-            cache_path: Caminho local onde o modelo será salvo.
+            model_filename: Model filename.
+            cache_path: Local path where the model will be saved.
 
         Raises:
-            Exception: Se houver erro no download.
+            Exception: If there is an error during download.
         """
         url = self._get_model_url(model_filename)
 
         try:
-            with st.spinner(f"Baixando modelo {self.model_version}..."):
+            with st.spinner(f"Downloading model {self.model_version}..."):
                 response = requests.get(url, timeout=30)
                 response.raise_for_status()
 
                 with cache_path.open("wb") as f:
                     f.write(response.content)
 
-                st.success(f"✓ Modelo {self.model_version} baixado com sucesso!")
+                st.success(f"✓ Model {self.model_version} downloaded successfully!")
         except requests.exceptions.RequestException as e:
             raise Exception(
-                f"Erro ao baixar modelo: {str(e)}\n"
-                f"Verifique se a release {self.model_version} existe no GitHub."
+                f"Error downloading model: {str(e)}\n"
+                f"Check if release {self.model_version} exists on GitHub."
             ) from e
 
     @st.cache_resource
@@ -116,42 +116,42 @@ class ModelLoader:
         model_filename: str = "random_forest_model.pkl",
     ) -> BaseEstimator:
         """
-        Carrega o modelo do cache local ou baixa do GitHub Releases.
+        Load the model from local cache or download from GitHub Releases.
 
         Args:
-            model_filename: Nome do arquivo do modelo.
+            model_filename: Model filename.
 
         Returns:
-            Modelo carregado e pronto para inferência.
+            Loaded model ready for inference.
 
         Raises:
-            Exception: Se houver erro ao carregar o modelo.
+            Exception: If there is an error loading the model.
         """
         cache_path = _self.cache_dir / f"{model_filename}_{_self.model_version}"
 
-        # Se o modelo não está em cache, faz download
+        # If model is not in cache, download it
         if not cache_path.exists():
             _self._download_model(model_filename, cache_path)
 
-        # Carrega o modelo do cache
+        # Load model from cache
         try:
             model = joblib.load(cache_path)
             return model
         except Exception as e:
-            raise Exception(f"Erro ao carregar modelo: {str(e)}") from e
+            raise Exception(f"Error loading model: {str(e)}") from e
 
 
 def get_model_version() -> str | None:
     """
-    Obtém a versão do modelo a partir de variável de ambiente.
+    Get the model version from an environment variable.
 
-    Permite configurar a versão do modelo via variável de ambiente
-    MODEL_VERSION, útil para deploys no Streamlit Cloud.
+    Allows configuring the model version via the MODEL_VERSION
+    environment variable, useful for Streamlit Cloud deployments.
 
-    Se a variável não estiver definida, retorna None para buscar
-    automaticamente a última release.
+    If the variable is not set, returns None to automatically fetch
+    the latest release.
 
     Returns:
-        Versão do modelo (ex: 'v1.0.0') ou None para buscar automaticamente.
+        Model version (e.g., 'v1.0.0') or None to fetch automatically.
     """
     return os.getenv("MODEL_VERSION", None)

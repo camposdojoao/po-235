@@ -1,8 +1,8 @@
 """
-Aplicação principal Streamlit para previsão de qualidade de vinhos.
+Main Streamlit application for wine quality prediction.
 
-Este módulo serve como ponto de entrada para a aplicação Streamlit,
-renderizando a interface de classificação com Random Forest.
+This module serves as the entry point for the Streamlit application,
+rendering the classification interface with Random Forest.
 """
 
 import sys

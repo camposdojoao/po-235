@@ -1,4 +1,4 @@
-"""Módulo de pré-processamento de dados de vinhos."""
+"""Wine data preprocessing module."""
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -6,29 +6,29 @@ from sklearn.model_selection import train_test_split
 
 class Preprocessing:
     """
-    Classe para pré-processamento de dados de vinhos.
+    Class for wine data preprocessing.
 
-    Realiza leitura, concatenação, categorização de qualidade,
-    seleção de features e divisão dos dados em treino e teste.
+    Performs reading, concatenation, quality categorization,
+    feature selection, and train-test data splitting.
     """
 
     def __init__(self) -> None:
-        """Inicializa a classe Preprocessing."""
+        """Initialize the Preprocessing class."""
         pass
 
     def leitura_dataset(self) -> tuple[pd.DataFrame, pd.DataFrame]:
         """
-        Lê os arquivos CSV de vinho tinto e branco.
+        Read the red and white wine CSV files.
 
         Returns:
-            Tupla contendo (df_red, df_white), os DataFrames de
-            vinho tinto e branco.
+            Tuple containing (df_red, df_white), the DataFrames of
+            red and white wines.
 
         Raises:
-            FileNotFoundError: Se os arquivos CSV não forem encontrados
-                nos caminhos especificados.
-            pd.errors.ParserError: Se houver erro ao parsear os
-                arquivos CSV.
+            FileNotFoundError: If the CSV files are not found
+                in the specified paths.
+            pd.errors.ParserError: If there is an error parsing the
+                CSV files.
         """
         self.df_red = pd.read_csv("src/winequality-red.csv", sep=";")
         self.df_white = pd.read_csv("src/winequality-white.csv", sep=";")
@@ -36,18 +36,18 @@ class Preprocessing:
 
     def join_datasets(self) -> pd.DataFrame:
         """
-        Concatena os datasets de vinho tinto e branco.
+        Concatenate the red and white wine datasets.
 
-        Se os DataFrames ainda não foram carregados, chama
-        automaticamente o método leitura_dataset().
+        If the DataFrames have not been loaded yet, automatically
+        calls the leitura_dataset() method.
 
         Returns:
-            DataFrame único contendo todos os dados de vinhos tinto
-            e branco concatenados.
+            Single DataFrame containing all concatenated red and
+            white wine data.
 
         Raises:
-            ValueError: Se houver inconsistência nas colunas dos
-                DataFrames ao concatenar.
+            ValueError: If there is inconsistency in DataFrame
+                columns when concatenating.
         """
         if self.df_red is None or self.df_white is None:
             self.leitura_dataset()
@@ -56,18 +56,18 @@ class Preprocessing:
 
     def apply_categoria(self) -> pd.Series:
         """
-        Converte a variável 'quality' em categorias numéricas discretas.
+        Convert the 'quality' variable into discrete numeric categories.
 
-        Categorização:
-        - 0 (Ruim): quality <= 5
-        - 1 (Média): 5 < quality < 7
-        - 2 (Boa): quality >= 7
+        Categorization:
+        - 0 (Poor): quality <= 5
+        - 1 (Average): 5 < quality < 7
+        - 2 (Good): quality >= 7
 
         Returns:
-            Série contendo as categorias de qualidade (0, 1 ou 2).
+            Series containing quality categories (0, 1, or 2).
 
         Raises:
-            KeyError: Se a coluna 'quality' não existir no DataFrame.
+            KeyError: If the 'quality' column does not exist in the DataFrame.
         """
         if self.data is None:
             self.join_datasets()
@@ -79,9 +79,9 @@ class Preprocessing:
 
     def feature_selection(self) -> tuple[pd.DataFrame, pd.Series]:
         """
-        Seleciona as features e a variável alvo para o modelo.
+        Select the features and target variable for the model.
 
-        Features selecionadas:
+        Selected features:
         - volatile acidity
         - density
         - alcohol
@@ -90,12 +90,12 @@ class Preprocessing:
         - sulphates
 
         Returns:
-            Tupla contendo (X, y), onde X é o DataFrame de features
-            e y é a Series da variável alvo.
+            Tuple containing (X, y), where X is the features DataFrame
+            and y is the target variable Series.
 
         Raises:
-            KeyError: Se alguma das colunas especificadas não existir
-                no DataFrame.
+            KeyError: If any of the specified columns does not exist
+                in the DataFrame.
         """
         if self.data is None:
             self.join_datasets()
@@ -118,21 +118,21 @@ class Preprocessing:
         self, test_size: float = 0.2, random_state: int = 42
     ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
         """
-        Divide os dados em conjuntos de treino e teste.
+        Split the data into training and test sets.
 
         Args:
-            test_size: Proporção dos dados destinados ao conjunto de
-                teste. Padrão é 0.2 (20% para teste, 80% para treino).
-            random_state: Seed para reprodutibilidade da divisão
-                aleatória. Padrão é 42.
+            test_size: Proportion of data for the test set.
+                Default is 0.2 (20% for test, 80% for training).
+            random_state: Seed for reproducibility of the random split.
+                Default is 42.
 
         Returns:
-            Tupla contendo (X_train, X_test, y_train, y_test),
-            os conjuntos de treino e teste.
+            Tuple containing (X_train, X_test, y_train, y_test),
+            the training and test sets.
 
         Raises:
-            ValueError: Se test_size não estiver entre 0 e 1, ou se
-                houver problemas com a estratificação.
+            ValueError: If test_size is not between 0 and 1, or if
+                there are problems with stratification.
         """
         if self.X is None or self.y is None:
             self.feature_selection()
@@ -149,21 +149,21 @@ class Preprocessing:
         self, test_size: float = 0.2, random_state: int = 42
     ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
         """
-        Executa o pipeline completo de pré-processamento de dados.
+        Execute the complete data preprocessing pipeline.
 
-        O pipeline inclui:
-        1. Leitura dos datasets de vinho tinto e branco
-        2. Concatenação dos datasets
-        3. Aplicação de categorização na variável qualidade
-        4. Seleção de features
-        5. Divisão de dados em treino e teste
+        The pipeline includes:
+        1. Reading the red and white wine datasets
+        2. Concatenating the datasets
+        3. Applying categorization to the quality variable
+        4. Feature selection
+        5. Splitting data into training and test sets
 
         Args:
-            test_size: Proporção dos dados para teste. Padrão é 0.2.
-            random_state: Seed para reprodutibilidade. Padrão é 42.
+            test_size: Proportion of data for testing. Default is 0.2.
+            random_state: Seed for reproducibility. Default is 42.
 
         Returns:
-            Tupla contendo (X_train, X_test, y_train, y_test).
+            Tuple containing (X_train, X_test, y_train, y_test).
         """
         self.leitura_dataset()
         self.join_datasets()
