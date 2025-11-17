@@ -8,164 +8,194 @@
 
 </div>
 
-## 📋 Sobre o Projeto
+## 📋 About the Project
 
-Este projeto foi desenvolvido como parte da disciplina **PO-235 - Projeto de Ciência de Dados**, ministrada pelo **Professor Filipe Verri**. O objetivo é criar um modelo de machine learning capaz de prever a qualidade de vinhos com base em suas características.
+This project was developed as part of the **PO-235 - Data Science Project** course, taught by **Professor Filipe Verri**. The goal is to create a machine learning model capable of predicting wine quality based on its characteristics.
 
-Utilizando o dataset [Wine Quality](https://archive.ics.uci.edu/dataset/186/wine+quality) da UCI Machine Learning Repository, este projeto explora técnicas de classificação para avaliar vinhos tintos e brancos da região do Vinho Verde em Portugal.
+Using the [Wine Quality](https://archive.ics.uci.edu/dataset/186/wine+quality) dataset from the UCI Machine Learning Repository, this project explores classification techniques to evaluate red and white wines from the Vinho Verde region in Portugal.
 
-## 🎯 Objetivos
+## 🎯 Objectives
 
-- Desenvolver um modelo de classificação para prever a qualidade de vinhos
-- Analisar a importância de características físico-químicas na qualidade do vinho
-- Implementar boas práticas de engenharia de software em projetos de ciência de dados
-- Criar uma interface interativa para visualização e predição
+- Develop a classification model to predict wine quality
+- Analyze the importance of physicochemical characteristics in wine quality
+- Implement software engineering best practices in data science projects
+- Create an interactive interface for visualization and prediction
 
 ## 📊 Dataset
 
-O projeto utiliza o **Wine Quality Dataset** disponibilizado pela UCI Machine Learning Repository:
+The project uses the **Wine Quality Dataset** provided by the UCI Machine Learning Repository:
 
-- **Fonte**: [UCI Wine Quality Dataset](https://archive.ics.uci.edu/dataset/186/wine+quality)
-- **Instâncias**: 4.898 amostras (1.599 vinhos tintos + 4.898 vinhos brancos)
-- **Características**: 11 variáveis físico-químicas
-- **Target**: Qualidade do vinho (score de 0 a 10)
+- **Source**: [UCI Wine Quality Dataset](https://archive.ics.uci.edu/dataset/186/wine+quality)
+- **Instances**: 6,497 samples (1,599 red wines + 4,898 white wines)
+- **Features**: 11 physicochemical variables
+- **Target**: Wine quality (score from 0 to 10)
 
-### Variáveis do Dataset
+### Dataset Variables
 
-| Variável              | Descrição                 |
-|-----------------------|---------------------------|
-| fixed_acidity         | Acidez fixa               |
-| volatile_acidity      | Acidez volátil            |
-| citric_acid           | Ácido cítrico             |
-| residual_sugar        | Açúcar residual           |
-| chlorides             | Cloretos                  |
-| free_sulfur_dioxide   | Dióxido de enxofre livre  |
-| total_sulfur_dioxide  | Dióxido de enxofre total  |
-| density               | Densidade                 |
-| pH                    | pH                        |
-| sulphates             | Sulfatos                  |
-| alcohol               | Teor alcoólico            |
-| quality               | Qualidade (variável alvo) |
+| Variable              | Description                |
+|-----------------------|----------------------------|
+| fixed_acidity         | Fixed acidity              |
+| volatile_acidity      | Volatile acidity           |
+| citric_acid           | Citric acid                |
+| residual_sugar        | Residual sugar             |
+| chlorides             | Chlorides                  |
+| free_sulfur_dioxide   | Free sulfur dioxide        |
+| total_sulfur_dioxide  | Total sulfur dioxide       |
+| density               | Density                    |
+| pH                    | pH                         |
+| sulphates             | Sulphates                  |
+| alcohol               | Alcohol content            |
+| quality               | Quality (target variable)  |
 
-## 🤖 Metodologia
+## 🤖 Methodology
 
-### Modelo Utilizado
+### Model Used
 
-O projeto utiliza o algoritmo **Random Forest** para classificação da qualidade de vinhos:
+The project uses the **Random Forest** algorithm for wine quality classification:
 
 - **Random Forest** ✅ 
-  - Modelo robusto e interpretável
-  - Excelente desempenho em dados tabulares
-  - Resistente a overfitting
-  - Fornece importância das features
+  - Robust and interpretable model
+  - Excellent performance on tabular data
+  - Resistant to overfitting
+  - Provides feature importance
 
-Durante o desenvolvimento inicial, outros algoritmos (XGBoost e Gradient Boosting) foram avaliados, mas o **Random Forest** foi escolhido como modelo final após análise comparativa de performance, métricas de avaliação e interpretabilidade.
+During initial development, other algorithms (XGBoost and Gradient Boosting) were evaluated, but **Random Forest** was chosen as the final model after comparative analysis of performance, evaluation metrics, and interpretability.
 
-### Abordagem
+### Approach
 
-1. **Análise Exploratória de Dados (EDA)**: Compreensão das distribuições e correlações
-2. **Pré-processamento**: Tratamento de dados, feature engineering
-3. **Treinamento de Modelos**: Experimentação com diferentes algoritmos
-4. **Avaliação**: Comparação de métricas (acurácia, precisão, recall, F1-score)
-5. **Otimização**: Tuning de hiperparâmetros do modelo selecionado
-6. **Deploy**: Interface web interativa com Streamlit
+1. **Exploratory Data Analysis (EDA)**: Understanding distributions and correlations
+2. **Preprocessing**: Data treatment, feature engineering
+3. **Model Training**: Experimentation with different algorithms
+4. **Evaluation**: Comparison of metrics (accuracy, precision, recall, F1-score)
+5. **Optimization**: Hyperparameter tuning of the selected model
+6. **Deploy**: Interactive web interface with Streamlit
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
-- **Python 3.11**: Linguagem principal do projeto
-- **scikit-learn**: Implementação do Random Forest e pipeline de ML
-- **pandas & numpy**: Manipulação e análise de dados
-- **matplotlib & seaborn**: Visualização de dados
-- **Streamlit**: Interface web interativa
-- **UV**: Gerenciador de pacotes Python
-- **Pyenv**: Gerenciador de versões Python
-- **pytest**: Framework de testes
+- **Python 3.11**: Main project language
+- **UV**: Modern Python package and version manager (written in Rust)
+- **scikit-learn**: Random Forest implementation and ML pipeline
+- **pandas & numpy**: Data manipulation and analysis
+- **matplotlib & seaborn**: Data visualization
+- **Streamlit**: Interactive web interface
+- **pytest**: Testing framework
 - **GitHub Actions**: CI/CD pipeline
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
 po-235/
-├── 📂 configs/           # Arquivos de configuração
-├── 📂 docs/              # Documentação do projeto
-│   ├── 1_como_configurar_ambiente.md
-│   ├── 2_como_contribuir_com_o_projeto.md
-│   └── 3_arquitetura_do_projeto.md
-├── 📂 entrypoints/       # Scripts principais (treinamento, predição, deploy)
-├── 📂 model/             # Modelos treinados e artefatos
-├── 📂 src/               # Dados e código fonte
+├── 📂 .github/          # GitHub Actions workflows (CI/CD)
+├── 📂 .streamlit/       # Streamlit configuration
+├── 📂 docs/             # Project documentation
+│   ├── 1_environment_setup.md
+│   ├── 2_contribution_guide.md
+│   └── 3_project_architecture.md
+├── 📂 entrypoints/      # Main scripts (training, prediction, deploy)
+│   ├── st_app.py       # Streamlit application entry point
+│   └── train.py        # Model training script
+├── 📂 models/           # Trained models and artifacts
+│   ├── model.py        # Model training logic
+│   ├── preprocessing.py # Data preprocessing
+│   └── inferences.py   # Inference utilities
+├── 📂 src/              # Data sources
 │   ├── winequality-red.csv
 │   ├── winequality-white.csv
 │   └── winequality.names
-├── 📂 streamlit/         # Interface web
-├── 📂 tests/             # Testes automatizados
-├── 📜 Makefile           # Comandos de automação
-├── 📜 README.md          # Este arquivo
-└── 📜 LICENSE            # Licença do projeto
+├── 📂 streamlit_app/    # Streamlit interface components
+│   ├── models.py       # UI model components
+│   └── model_loader.py # Model loading from GitHub Releases
+├── 📂 tests/            # Automated tests
+│   ├── test_model.py
+│   ├── test_preprocessing.py
+│   └── conftest.py
+├── 📜 Makefile          # Automation commands
+├── 📜 pyproject.toml    # Project dependencies (UV)
+├── 📜 uv.lock           # Locked dependencies
+├── 📜 requirements.txt  # For streamlit deploy
+├── 📜 README.md         # This file
+└── 📜 LICENSE           # Project license
 ```
 
-Para mais detalhes sobre a arquitetura, consulte [`docs/3_arquitetura_do_projeto.md`](./docs/3_arquitetura_do_projeto.md).
+For more details about the architecture, see [`docs/3_project_architecture.md`](./docs/3_project_architecture.md).
 
-## 🚀 Como Começar
+## 🚀 Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
-- Sistema operacional Linux (ou WSL no Windows)
-- Git instalado
-- Acesso à internet para download de dependências
+- Linux operating system (or WSL on Windows)
+- Git installed
+- Internet access for downloading dependencies
 
-### Instalação e Configuração
+### Installation and Configuration
 
-Para configurar o ambiente de desenvolvimento completo, siga o guia detalhado em [`docs/1_como_configurar_ambiente.md`](./docs/1_como_configurar_ambiente.md).
+For complete development environment setup, follow the detailed guide in [`docs/1_environment_setup.md`](./docs/1_environment_setup.md).
 
-**Resumo dos passos:**
+**Quick start:**
 
-1. **Clonar o repositório**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/camposdojoao/po-235.git
    cd po-235
    ```
 
-2. **Configurar ambiente**
+2. **Setup environment**
    ```bash
    make install-uv
    make install-dev
    ```
 
-3. **Executar a aplicação Streamlit**
+3. **Run the Streamlit application**
    ```bash
    make streamlit
    ```
 
-## 🤝 Como Contribuir
+## 🤝 How to Contribute
 
-Este projeto segue boas práticas de desenvolvimento colaborativo com Git Flow simplificado. Para contribuir:
+This project follows collaborative development best practices with simplified Git Flow. To contribute:
 
-1. Atualize a branch `master`
-2. Crie uma branch seguindo o padrão `feature/*` ou `fix/*`
-3. Desenvolva e teste suas alterações
-4. Faça commit com mensagens descritivas
-5. Crie um Pull Request
+1. Update the `main` branch
+2. Create a branch following the pattern `feature/*` or `fix/*`
+3. Develop and test your changes
+4. Commit with descriptive messages
+5. Create a Pull Request
 
-Para instruções detalhadas, consulte [`docs/2_como_contribuir_com_o_projeto.md`](./docs/2_como_contribuir_com_o_projeto.md).
+For detailed instructions, see [`docs/2_contribution_guide.md`](./docs/2_contribution_guide.md).
 
-### Pipeline de CI/CD
+### CI/CD Pipeline
 
-O projeto possui uma pipeline automatizada que valida:
-- ✅ Testes unitários
-- ✅ Linting (padrões de código)
-- ✅ Nomenclatura de branches
+#### Continuous Integration (CI)
 
-## 📚 Documentação
+The CI pipeline runs automatically on:
+- Pull requests to `main` branch
+- Pushes to `feature/**`, `fix/**` branches
 
-- [Como Configurar o Ambiente](./docs/1_como_configurar_ambiente.md)
-- [Como Contribuir com o Projeto](./docs/2_como_contribuir_com_o_projeto.md)
-- [Arquitetura do Projeto](./docs/3_arquitetura_do_projeto.md)
+**Validation steps:**
+1. ✅ **Branch naming validation** - Ensures branches follow patterns: `feature/*`, `fix/*`, `hotfix/*`, `release/*`
+2. ✅ **Code linting** - Checks code style with `ruff check`
+3. ✅ **Format validation** - Ensures code formatting with `ruff format --check`
+4. ✅ **Dependency sync** - Validates `requirements.txt` is in sync with `pyproject.toml`
+5. ✅ **Unit tests + coverage** - Runs all tests with minimum 75% code coverage
+6. ✅ **Coverage report** - Uploads coverage report as artifact
 
-## 👥 Equipe
+#### Continuous Deployment (CD)
 
-Projeto desenvolvido por estudantes da disciplina PO-235 - Projeto de Ciência de Dados.
+The CD pipeline triggers on version tags (e.g., `v1.0.0`, `v1.5.0`):
+- Trains model with 100% of available data (all 11 features)
+- Creates GitHub Release with trained model and metadata
+- Makes model available for automatic download by Streamlit app
 
-## 📄 Licença
+## 📚 Documentation
 
-Este projeto está sob a licença MIT. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+- [Environment Setup Guide](./docs/1_environment_setup.md)
+- [Contribution Guide](./docs/2_contribution_guide.md)
+- [Project Architecture](./docs/3_project_architecture.md)
+- [Model Deployment Guide](./docs/4_model_deployment.md)
+
+## 👥 Team
+
+Project developed by students of the PO-235 - Data Science Project course.
+
+## 📄 License
+
+This project is under the MIT license. See the [LICENSE](./LICENSE) file for more details.
