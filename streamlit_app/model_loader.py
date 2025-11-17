@@ -102,8 +102,6 @@ class ModelLoader:
 
                 with cache_path.open("wb") as f:
                     f.write(response.content)
-
-                st.success(f"✓ Model {self.model_version} downloaded successfully!")
         except requests.exceptions.RequestException as e:
             raise Exception(
                 f"Error downloading model: {str(e)}\n"
