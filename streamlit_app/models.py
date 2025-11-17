@@ -47,10 +47,6 @@ class Models:
             # Update version after loader determines which one (may be the latest)
             self.model_version = loader.model_version
 
-            # Inform which version was loaded
-            if self.model_version:
-                st.info(f"📦 Loading model version: **{self.model_version}**")
-
             model = loader.load_model("random_forest_model.pkl")
             return model
         except Exception as e:
@@ -67,14 +63,10 @@ class Models:
         Returns:
             None
         """
-        st.header("Required data:", divider="yellow", width="content")
-
-        st.warning(
-            "These are the minimum data required for classification.\n"
-            "For better performance, fill in all fields."
-        )
 
         with st.form(key="form_random_forest_mandatory"):
+            st.header("Required data:", divider="yellow", width="content")
+
             col_1, col_2, col_3 = st.columns(3)
 
             with col_1:
@@ -210,3 +202,5 @@ class Models:
         """
         st.title(self.title, anchor=False)
         self._render_form()
+
+        st.caption(f"Model version: {self.model_version}")
