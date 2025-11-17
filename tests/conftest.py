@@ -1,4 +1,4 @@
-"""Fixtures compartilhadas para os testes."""
+"""Shared fixtures for tests."""
 
 import sys
 from collections.abc import Generator
@@ -16,21 +16,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 @pytest.fixture
 def sample_wine_data() -> pd.DataFrame:
     """
-    Cria dados de vinho de exemplo para testes.
+    Create sample wine data for testing.
 
-    Retorna um DataFrame contendo um pequeno conjunto de dados de vinhos
-    com todas as features necessárias e valores de qualidade variados
-    para testar a categorização.
+    Returns a DataFrame containing a small wine dataset
+    with all necessary features and varied quality values
+    to test categorization.
 
     Returns:
-        DataFrame com 5 amostras de vinhos com todas as features e qualidades
-        variadas (5, 5, 5, 6, 8) para testar diferentes categorias.
+        DataFrame with 5 wine samples with all features and varied
+        qualities (5, 5, 5, 6, 8) to test different categories.
 
     Note:
-        Os valores de qualidade são escolhidos para cobrir todas as categorias:
-        - quality <= 5: categoria 0 (Ruim)
-        - 5 < quality < 7: categoria 1 (Média)
-        - quality >= 7: categoria 2 (Boa)
+        Quality values are chosen to cover all categories:
+        - quality <= 5: category 0 (Poor)
+        - 5 < quality < 7: category 1 (Average)
+        - quality >= 7: category 2 (Good)
     """
     data = {
         "fixed acidity": [7.4, 7.8, 7.8, 11.2, 7.4],
@@ -52,19 +52,19 @@ def sample_wine_data() -> pd.DataFrame:
 @pytest.fixture
 def sample_features() -> pd.DataFrame:
     """
-    Cria features de exemplo para testes de predição.
+    Create sample features for prediction tests.
 
-    Retorna um DataFrame contendo apenas as 6 features selecionadas
-    para o modelo, com 3 amostras variadas para testar predições.
+    Returns a DataFrame containing only the 6 selected features
+    for the model, with 3 varied samples to test predictions.
 
     Returns:
-        DataFrame com 3 amostras contendo as 6 features selecionadas:
+        DataFrame with 3 samples containing the 6 selected features:
         volatile acidity, density, alcohol, total sulfur dioxide,
-        chlorides e sulphates.
+        chlorides, and sulphates.
 
     Note:
-        Este DataFrame contém apenas as features necessárias para
-        fazer predições, sem incluir a coluna quality.
+        This DataFrame contains only the features necessary for
+        making predictions, without including the quality column.
     """
     data = {
         "volatile acidity": [0.7, 0.28, 0.5],
@@ -80,16 +80,16 @@ def sample_features() -> pd.DataFrame:
 @pytest.fixture
 def temp_model_path(tmp_path: Path) -> Path:
     """
-    Retorna um caminho temporário para salvar modelos de teste.
+    Return a temporary path for saving test models.
 
     Args:
-        tmp_path: Diretório temporário fornecido pelo pytest.
+        tmp_path: Temporary directory provided by pytest.
 
     Returns:
-        Path para um arquivo .joblib no diretório temporário.
+        Path to a .joblib file in the temporary directory.
 
     Note:
-        O arquivo é automaticamente removido após o teste pelo pytest.
+        The file is automatically removed after the test by pytest.
     """
     return tmp_path / "test_model.joblib"
 
@@ -99,24 +99,24 @@ def prepared_train_data(
     sample_wine_data: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.Series]:
     """
-    Prepara dados de treino (X, y) prontos para uso.
+    Prepare training data (X, y) ready for use.
 
-    Processa o DataFrame de vinhos para extrair as features selecionadas
-    e a variável alvo categorizada, pronta para treinar modelos.
+    Processes the wine DataFrame to extract selected features
+    and the categorized target variable, ready for training models.
 
     Args:
-        sample_wine_data: DataFrame com dados de vinhos de exemplo (fixture).
+        sample_wine_data: DataFrame with sample wine data (fixture).
 
     Returns:
-        Tupla contendo:
-        - X (DataFrame): Features selecionadas para o modelo
-        - y (Series): Variável alvo categorizada (0, 1 ou 2)
+        Tuple containing:
+        - X (DataFrame): Selected features for the model
+        - y (Series): Categorized target variable (0, 1, or 2)
 
     Note:
-        As categorias de qualidade seguem a regra:
-        - 0 (Ruim): quality <= 5
-        - 1 (Média): 5 < quality < 7
-        - 2 (Boa): quality >= 7
+        Quality categories follow the rule:
+        - 0 (Poor): quality <= 5
+        - 1 (Average): 5 < quality < 7
+        - 2 (Good): quality >= 7
     """
     X = sample_wine_data[  # noqa: N806
         [
@@ -140,21 +140,21 @@ def trained_model_path(
     prepared_train_data: tuple[pd.DataFrame, pd.Series], temp_model_path: Path
 ) -> Path:
     """
-    Cria, treina e salva um modelo RandomForest para testes.
+    Create, train, and save a RandomForest model for testing.
 
-    Treina um modelo RandomForestClassifier com os dados de exemplo
-    e salva o modelo treinado em um arquivo temporário.
+    Trains a RandomForestClassifier model with the sample data
+    and saves the trained model to a temporary file.
 
     Args:
-        prepared_train_data: Tupla com (X, y) preparados (fixture).
-        temp_model_path: Caminho temporário para salvar o modelo (fixture).
+        prepared_train_data: Tuple with prepared (X, y) (fixture).
+        temp_model_path: Temporary path to save the model (fixture).
 
     Returns:
-        Path para o arquivo .joblib contendo o modelo treinado.
+        Path to the .joblib file containing the trained model.
 
     Note:
-        O modelo é treinado com random_state=42 para reprodutibilidade.
-        O arquivo é automaticamente removido após o teste pelo pytest.
+        The model is trained with random_state=42 for reproducibility.
+        The file is automatically removed after the test by pytest.
     """
     X, y = prepared_train_data  # noqa: N806
 
@@ -169,18 +169,18 @@ def trained_model_path(
 @pytest.fixture
 def streamlit_mocks() -> Generator[dict[str, object]]:
     """
-    Configura mocks para Streamlit e seus componentes.
+    Configure mocks for Streamlit and its components.
 
-    Cria mocks para os componentes principais do Streamlit (Models)
-    permitindo testar o entrypoint sem inicializar o servidor Streamlit real.
+    Creates mocks for the main Streamlit components (Models)
+    allowing testing of the entrypoint without initializing the actual Streamlit server.
 
     Yields:
-        Dicionário contendo os mocks configurados:
-        - MockModels: Mock da classe Models
-        - models_instance: Instância mockada do Models
+        Dictionary containing the configured mocks:
+        - MockModels: Mock of the Models class
+        - models_instance: Mocked instance of Models
 
     Note:
-        Todos os mocks são automaticamente limpos após o teste.
+        All mocks are automatically cleaned up after the test.
     """
     with patch("streamlit_app.models.Models") as mock_models:  # noqa: N806
         mock_models_instance = MagicMock()
@@ -195,21 +195,21 @@ def streamlit_mocks() -> Generator[dict[str, object]]:
 @pytest.fixture
 def train_mocks() -> Generator[dict[str, object]]:
     """
-    Configura mocks para o entrypoint de treinamento.
+    Configure mocks for the training entrypoint.
 
-    Cria mocks para a classe Modelo permitindo testar o entrypoint
-    de treinamento sem executar o treinamento real do modelo, que
-    seria demorado e desnecessário para testes unitários.
+    Creates mocks for the Modelo class allowing testing of the training
+    entrypoint without executing actual model training, which
+    would be time-consuming and unnecessary for unit tests.
 
     Yields:
-        Dicionário contendo os mocks configurados:
-        - MockModelo: Mock da classe Modelo
-        - modelo_instance: Instância mockada do Modelo
+        Dictionary containing the configured mocks:
+        - MockModelo: Mock of the Modelo class
+        - modelo_instance: Mocked instance of Modelo
 
     Note:
-        A instância mockada possui o método train() configurado,
-        permitindo verificar se foi chamado corretamente.
-        Todos os mocks são automaticamente limpos após o teste.
+        The mocked instance has the train() method configured,
+        allowing verification of correct calls.
+        All mocks are automatically cleaned up after the test.
     """
     with patch("entrypoints.train.Modelo") as mock_modelo:  # noqa: N806
         mock_instance = MagicMock()

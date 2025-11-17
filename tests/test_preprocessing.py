@@ -1,4 +1,4 @@
-"""Testes unitários para o módulo de pré-processamento."""
+"""Unit tests for the preprocessing module."""
 
 import pandas as pd
 
@@ -7,16 +7,16 @@ from models.preprocessing import Preprocessing
 
 def test_leitura_dataset() -> None:
     """
-    Testa a leitura dos arquivos CSV de vinhos.
+    Test reading of wine CSV files.
 
-    Verifica se os datasets de vinho tinto e branco são lidos corretamente
-    dos arquivos CSV, se são DataFrames válidos com dados, e se contêm
-    a coluna 'quality' necessária para o treinamento.
+    Verifies that the red and white wine datasets are correctly read
+    from CSV files, are valid DataFrames with data, and contain
+    the 'quality' column necessary for training.
 
     Asserts:
-        - Ambos os retornos são DataFrames pandas
-        - Ambos os DataFrames contêm dados (não estão vazios)
-        - Ambos possuem a coluna 'quality'
+        - Both returns are pandas DataFrames
+        - Both DataFrames contain data (are not empty)
+        - Both have the 'quality' column
     """
     preprocessing = Preprocessing()
     df_red, df_white = preprocessing.leitura_dataset()
@@ -33,15 +33,15 @@ def test_leitura_dataset() -> None:
 
 def test_join_datasets() -> None:
     """
-    Testa a concatenação dos datasets de vinho tinto e branco.
+    Test concatenation of red and white wine datasets.
 
-    Verifica se os dois datasets são concatenados corretamente em um
-    único DataFrame, mantendo todas as linhas e colunas originais.
+    Verifies that the two datasets are correctly concatenated into a
+    single DataFrame, maintaining all original rows and columns.
 
     Asserts:
-        - O resultado é um DataFrame pandas
-        - O tamanho total é a soma dos tamanhos dos datasets individuais
-        - A coluna 'quality' é mantida após a concatenação
+        - The result is a pandas DataFrame
+        - The total size is the sum of the individual dataset sizes
+        - The 'quality' column is maintained after concatenation
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -56,17 +56,17 @@ def test_join_datasets() -> None:
 
 def test_apply_categoria() -> None:
     """
-    Testa a aplicação de categorização na variável quality.
+    Test application of categorization to the quality variable.
 
-    Verifica se a variável contínua 'quality' é convertida corretamente
-    em categorias discretas:
-    - 0 (Ruim): quality <= 5
-    - 1 (Média): 5 < quality < 7
-    - 2 (Boa): quality >= 7
+    Verifies that the continuous 'quality' variable is correctly converted
+    into discrete categories:
+    - 0 (Poor): quality <= 5
+    - 1 (Average): 5 < quality < 7
+    - 2 (Good): quality >= 7
 
     Asserts:
-        - O resultado é uma Series pandas
-        - Todos os valores estão no conjunto {0, 1, 2}
+        - The result is a pandas Series
+        - All values are in the set {0, 1, 2}
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -80,10 +80,10 @@ def test_apply_categoria() -> None:
 
 def test_feature_selection() -> None:
     """
-    Testa a seleção das features relevantes para o modelo.
+    Test selection of relevant features for the model.
 
-    Verifica se as 6 features mais importantes são selecionadas
-    corretamente do dataset completo:
+    Verifies that the 6 most important features are correctly selected
+    from the complete dataset:
     - volatile acidity
     - density
     - alcohol
@@ -92,9 +92,9 @@ def test_feature_selection() -> None:
     - sulphates
 
     Asserts:
-        - X é um DataFrame pandas
-        - y é uma Series pandas
-        - X contém exatamente as 6 features esperadas na ordem correta
+        - X is a pandas DataFrame
+        - y is a pandas Series
+        - X contains exactly the 6 expected features in the correct order
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -119,15 +119,15 @@ def test_feature_selection() -> None:
 
 def test_split_dados() -> None:
     """
-    Testa a divisão dos dados em conjuntos de treino e teste.
+    Test splitting of data into training and test sets.
 
-    Verifica se os dados são divididos corretamente usando estratificação
-    para manter a proporção das classes, e se a divisão segue a proporção
-    padrão de 80% treino / 20% teste.
+    Verifies that the data is correctly split using stratification
+    to maintain class proportions, and that the split follows the default
+    80% training / 20% test ratio.
 
     Asserts:
-        - Todos os retornos (X_train, X_test, y_train, y_test) têm o tipo correto
-        - A proporção de treino está entre 75% e 85% (margem de 5%)
+        - All returns (X_train, X_test, y_train, y_test) have the correct type
+        - The training proportion is between 75% and 85% (5% margin)
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -149,26 +149,26 @@ def test_split_dados() -> None:
 
 def test_preprocess() -> None:
     """
-    Testa o pipeline completo de pré-processamento.
+    Test the complete preprocessing pipeline.
 
-    Verifica se o método preprocess() executa todas as etapas de
-    pré-processamento corretamente em sequência:
-    1. Leitura dos datasets
-    2. Concatenação
-    3. Categorização de qualidade
-    4. Seleção de features
-    5. Divisão em treino/teste
+    Verifies that the preprocess() method executes all preprocessing
+    steps correctly in sequence:
+    1. Reading datasets
+    2. Concatenation
+    3. Quality categorization
+    4. Feature selection
+    5. Train/test split
 
     Args:
-        Nenhum - usa os datasets reais de vinhos.
+        None - uses the actual wine datasets.
 
     Asserts:
-        - Todos os retornos são do tipo correto
-        - X_train e X_test contêm dados
-        - As features corretas estão presentes em X_train
+        - All returns are of the correct type
+        - X_train and X_test contain data
+        - The correct features are present in X_train
 
     Note:
-        Este é um teste de integração que valida o pipeline completo.
+        This is an integration test that validates the complete pipeline.
     """
     preprocessing = Preprocessing()
     X_train, X_test, y_train, y_test = preprocessing.preprocess()  # noqa: N806

@@ -1,24 +1,24 @@
-"""Testes unitários para o entrypoint de treinamento."""
+"""Unit tests for the training entrypoint."""
 
 
 def test_train_executa_sem_erros(train_mocks: dict[str, object]) -> None:  # noqa: ARG001
     """
-    Testa se o entrypoint de treinamento executa sem erros.
+    Test if the training entrypoint executes without errors.
 
-    Verifica se a função main() do entrypoint train.py pode ser executada
-    sem lançar exceções, garantindo que o pipeline de treinamento está
-    funcional e pode ser iniciado.
+    Verifies that the main() function of the train.py entrypoint can be executed
+    without raising exceptions, ensuring that the training pipeline is
+    functional and can be started.
 
     Args:
-        train_mocks: Dicionário com mocks configurados para o modelo (fixture).
+        train_mocks: Dictionary with configured mocks for the model (fixture).
 
     Note:
-        Este teste usa mocks para evitar o treinamento real do modelo,
-        que seria demorado e desnecessário para verificar se o entrypoint
-        está funcionando corretamente.
+        This test uses mocks to avoid actual model training,
+        which would be time-consuming and unnecessary to verify if the entrypoint
+        is working correctly.
 
     Raises:
-        Exception: Se houver qualquer erro durante a execução do entrypoint.
+        Exception: If there is any error during entrypoint execution.
     """
     from entrypoints.train import main
 

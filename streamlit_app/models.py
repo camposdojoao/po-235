@@ -1,8 +1,8 @@
 """
-Módulo responsável pela visualização do modelo de Machine Learning.
+Module responsible for the Machine Learning model visualization.
 
-Este módulo contém a classe Models que gerencia a exibição do formulário
-de entrada de dados e previsão usando Random Forest.
+This module contains the Models class that manages the display of the
+data input form and prediction using Random Forest.
 """
 
 import pandas as pd
@@ -15,63 +15,63 @@ from streamlit_app.model_loader import ModelLoader, get_model_version
 class Models:
     def __init__(self) -> None:
         """
-        Inicializa a view de Modelos com configuração padrão.
+        Initialize the Models view with default configuration.
 
-        Configura o título de exibição para a interface de previsão
-        de qualidade de vinhos usando Random Forest.
+        Configures the display title for the wine quality prediction
+        interface using Random Forest.
 
         Attributes:
-            title (str): Título da página.
-            model: Modelo Random Forest carregado das GitHub Releases.
-            model_version (str): Versão do modelo em uso.
+            title (str): Page title.
+            model: Random Forest model loaded from GitHub Releases.
+            model_version (str): Model version in use.
         """
-        self.title = "Classificação de Qualidade de Vinhos"
+        self.title = "Wine Quality Classification"
         self.model_version = get_model_version()
         self.model = self._load_model()
 
     def _load_model(self) -> BaseEstimator | None:
         """
-        Carrega o modelo Random Forest treinado do GitHub Releases.
+        Load the trained Random Forest model from GitHub Releases.
 
-        O modelo é baixado automaticamente da última release disponível
-        e mantido em cache local para melhor performance.
+        The model is automatically downloaded from the latest available
+        release and kept in local cache for better performance.
 
         Returns:
-            Modelo Random Forest carregado e pronto para uso.
+            Loaded Random Forest model ready to use.
 
         Raises:
-            Exception: Se houver erro ao baixar ou carregar o modelo.
+            Exception: If there is an error downloading or loading the model.
         """
         try:
             loader = ModelLoader(model_version=self.model_version)
-            # Atualiza a versão após o loader determinar qual é (pode ser a última)
+            # Update version after loader determines which one (may be the latest)
             self.model_version = loader.model_version
 
-            # Informa qual versão foi carregada
+            # Inform which version was loaded
             if self.model_version:
-                st.info(f"📦 Carregando modelo versão: **{self.model_version}**")
+                st.info(f"📦 Loading model version: **{self.model_version}**")
 
             model = loader.load_model("random_forest_model.pkl")
             return model
         except Exception as e:
             st.error(
-                f"❌ Erro ao carregar modelo:\n{str(e)}\n\n"
-                "Verifique se a release existe no GitHub e tente novamente."
+                f"❌ Error loading model:\n{str(e)}\n\n"
+                "Check if the release exists on GitHub and try again."
             )
             return None
 
     def _render_form(self) -> None:
         """
-        Renderiza o formulário de entrada de dados para o Random Forest.
+        Render the data input form for Random Forest.
 
         Returns:
             None
         """
-        st.header("Dados obrigatórios:", divider="yellow", width="content")
+        st.header("Required data:", divider="yellow", width="content")
 
         st.warning(
-            "Estes são os dados mínimos para fazer a classificação.\n"
-            "Para ter um melhor desempenho, preencha todos os campos."
+            "These are the minimum data required for classification.\n"
+            "For better performance, fill in all fields."
         )
 
         with st.form(key="form_random_forest_mandatory"):
@@ -82,7 +82,7 @@ class Models:
                     "Volatile Acidity *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório",
+                    help="Required field",
                 )
                 density = st.number_input(
                     "Density *", min_value=0.0, format="%.4f", help="Campo obrigatório"
@@ -96,7 +96,7 @@ class Models:
                     "Total Sulfur Dioxide *",
                     min_value=0.0,
                     format="%.2f",
-                    help="Campo obrigatório",
+                    help="Required field",
                 )
 
             with col_3:
@@ -104,16 +104,16 @@ class Models:
                     "Chlorides *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório",
+                    help="Required field",
                 )
                 sulphates = st.number_input(
                     "Sulphates *",
                     min_value=0.0,
                     format="%.4f",
-                    help="Campo obrigatório",
+                    help="Required field",
                 )
 
-            st.header("Campos opcionais:", divider="yellow", width="content")
+            st.header("Optional fields:", divider="yellow", width="content")
 
             col_4, col_5, col_6 = st.columns(3)
 
@@ -138,7 +138,7 @@ class Models:
                     "pH", min_value=0.0, max_value=14.0, value=0.0, format="%.2f"
                 )
 
-            submitted = st.form_submit_button("Classificar", type="primary")
+            submitted = st.form_submit_button("Classify", type="primary")
 
             if submitted:
                 campos_vazios = []
@@ -157,20 +157,20 @@ class Models:
 
                 if campos_vazios:
                     st.error(
-                        f"❌ Por favor, preencha os seguintes campos obrigatórios:\n"
+                        f"❌ Please fill in the following required fields:\n"
                         f"- {', '.join(campos_vazios)}"
                     )
                 else:
-                    st.success("✅ Todos os campos obrigatórios foram preenchidos!")
+                    st.success("✅ All required fields have been filled!")
 
                     if self.model is None:
                         st.error(
-                            "❌ Modelo não disponível. Não foi possível "
-                            "carregar o modelo para realizar a predição."
+                            "❌ Model not available. Unable to "
+                            "load the model to perform prediction."
                         )
                     else:
-                        # Preparar dados para predição
-                        # As features devem estar na mesma ordem do treinamento
+                        # Prepare data for prediction
+                        # Features must be in the same order as training
                         dados = pd.DataFrame(
                             [
                                 {
@@ -184,26 +184,26 @@ class Models:
                             ]
                         )
 
-                        # Realizar predição
-                        with st.spinner("Processando classificação..."):
+                        # Perform prediction
+                        with st.spinner("Processing classification..."):
                             resultado = self.model.predict(dados)
                             qualidade_map = {
-                                0: "Ruim (≤ 5)",
-                                1: "Média (6)",
-                                2: "Boa (≥ 7)",
+                                0: "Poor (≤ 5)",
+                                1: "Average (6)",
+                                2: "Good (≥ 7)",
                             }
-                            qualidade = qualidade_map.get(resultado[0], "Desconhecida")
+                            qualidade = qualidade_map.get(resultado[0], "Unknown")
 
-                        # Exibir resultado
-                        st.success(f"🍷 **Qualidade prevista:** {qualidade}")
-                        st.info(f"Modelo utilizado: Random Forest {self.model_version}")
+                        # Display result
+                        st.success(f"🍷 **Predicted quality:** {qualidade}")
+                        st.info(f"Model used: Random Forest {self.model_version}")
 
     def render(self) -> None:
         """
-        Renderiza a interface de previsão com Random Forest.
+        Render the prediction interface with Random Forest.
 
-        Exibe o título e o formulário de entrada de dados para realizar
-        a classificação da qualidade do vinho usando Random Forest.
+        Displays the title and data input form to perform
+        wine quality classification using Random Forest.
 
         Returns:
             None

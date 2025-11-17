@@ -1,25 +1,25 @@
-"""Testes unitários para o entrypoint Streamlit."""
+"""Unit tests for the Streamlit entrypoint."""
 
 import importlib
 
 
 def test_st_app_executa_sem_erros(streamlit_mocks: dict[str, object]) -> None:  # noqa: ARG001
     """
-    Testa se o entrypoint Streamlit executa sem erros.
+    Test if the Streamlit entrypoint executes without errors.
 
-    Verifica se o arquivo st_app.py pode ser importado e executado
-    sem lançar exceções, garantindo que a aplicação Streamlit está
-    funcional e pode ser iniciada.
+    Verifies that the st_app.py file can be imported and executed
+    without raising exceptions, ensuring that the Streamlit application is
+    functional and can be started.
 
     Args:
-        streamlit_mocks: Dicionário com mocks configurados para Streamlit (fixture).
+        streamlit_mocks: Dictionary with configured mocks for Streamlit (fixture).
 
     Note:
-        Este teste usa mocks para evitar a necessidade de inicializar
-        o servidor Streamlit real durante os testes.
+        This test uses mocks to avoid the need to initialize
+        the actual Streamlit server during tests.
 
     Raises:
-        Exception: Se houver qualquer erro durante a execução do entrypoint.
+        Exception: If there is any error during entrypoint execution.
     """
     import entrypoints.st_app
 
