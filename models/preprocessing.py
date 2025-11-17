@@ -81,13 +81,18 @@ class Preprocessing:
         """
         Select the features and target variable for the model.
 
-        Selected features:
+        Selected features (all 11 available features):
+        - fixed acidity
         - volatile acidity
-        - density
-        - alcohol
-        - total sulfur dioxide
+        - citric acid
+        - residual sugar
         - chlorides
+        - free sulfur dioxide
+        - total sulfur dioxide
+        - density
+        - pH
         - sulphates
+        - alcohol
 
         Returns:
             Tuple containing (X, y), where X is the features DataFrame
@@ -103,32 +108,38 @@ class Preprocessing:
             self.apply_categoria()
         self.X = self.data[
             [
+                "fixed acidity",
                 "volatile acidity",
-                "density",
-                "alcohol",
-                "total sulfur dioxide",
+                "citric acid",
+                "residual sugar",
                 "chlorides",
+                "free sulfur dioxide",
+                "total sulfur dioxide",
+                "density",
+                "pH",
                 "sulphates",
+                "alcohol",
             ]
         ]
         self.y = self.data["quality"]
         return self.X, self.y
 
     def split_dados(
-        self, test_size: float = 0.2, random_state: int = 42
-    ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+        self, test_size: float = 0.0, random_state: int = 42
+    ) -> tuple[pd.DataFrame, pd.DataFrame | None, pd.Series, pd.Series | None]:
         """
         Split the data into training and test sets.
 
         Args:
             test_size: Proportion of data for the test set.
-                Default is 0.2 (20% for test, 80% for training).
+                Default is 0.0 (100% for training, no test set).
+                Set to a value > 0 (e.g., 0.2) to create a test set.
             random_state: Seed for reproducibility of the random split.
                 Default is 42.
 
         Returns:
-            Tuple containing (X_train, X_test, y_train, y_test),
-            the training and test sets.
+            Tuple containing (X_train, X_test, y_train, y_test).
+            If test_size is 0, X_test and y_test will be None.
 
         Raises:
             ValueError: If test_size is not between 0 and 1, or if
@@ -136,18 +147,27 @@ class Preprocessing:
         """
         if self.X is None or self.y is None:
             self.feature_selection()
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X,
-            self.y,
-            test_size=test_size,
-            random_state=random_state,
-            stratify=self.y,
-        )
+
+        if test_size == 0:
+            # Use 100% of data for training
+            self.X_train = self.X
+            self.y_train = self.y
+            self.X_test = None
+            self.y_test = None
+        else:
+            # Split data into training and test sets
+            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+                self.X,
+                self.y,
+                test_size=test_size,
+                random_state=random_state,
+                stratify=self.y,
+            )
         return self.X_train, self.X_test, self.y_train, self.y_test
 
     def preprocess(
-        self, test_size: float = 0.2, random_state: int = 42
-    ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+        self, test_size: float = 0.0, random_state: int = 42
+    ) -> tuple[pd.DataFrame, pd.DataFrame | None, pd.Series, pd.Series | None]:
         """
         Execute the complete data preprocessing pipeline.
 
@@ -156,14 +176,16 @@ class Preprocessing:
         2. Concatenating the datasets
         3. Applying categorization to the quality variable
         4. Feature selection
-        5. Splitting data into training and test sets
+        5. Splitting data into training and test sets (optional)
 
         Args:
-            test_size: Proportion of data for testing. Default is 0.2.
+            test_size: Proportion of data for testing. Default is 0.0 (100% training).
+                Set to a value > 0 (e.g., 0.2) to create a test set.
             random_state: Seed for reproducibility. Default is 42.
 
         Returns:
             Tuple containing (X_train, X_test, y_train, y_test).
+            If test_size is 0, X_test and y_test will be None.
         """
         self.leitura_dataset()
         self.join_datasets()

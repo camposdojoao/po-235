@@ -82,21 +82,18 @@ def test_evaluate_model_sem_dados() -> None:
     """
     Test behavior when trying to evaluate model without test data.
 
-    Verifies that ValueError is raised when we try to evaluate a model
-    without having prepared the test data (X_test and y_test) beforehand.
-
-    Raises:
-        ValueError: When test data is not available.
+    Verifies that evaluate_model returns None when there is no test data
+    (X_test and y_test are None), which happens when training with 100%
+    of the data (default behavior).
 
     Asserts:
-        - The error message contains "not available"
+        - The return value is None when no test data is available
     """
     modelo = Modelo()
 
-    with pytest.raises(ValueError) as exc_info:
-        modelo.evaluate_model()
+    result = modelo.evaluate_model()
 
-    assert "not available" in str(exc_info.value)
+    assert result is None
 
 
 def test_evaluate_model_retorna_metricas(

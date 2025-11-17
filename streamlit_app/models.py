@@ -65,130 +65,168 @@ class Models:
         """
 
         with st.form(key="form_random_forest_mandatory"):
-            st.header("Required data:", divider="yellow", width="content")
+            st.header("Wine Chemical Properties:", divider="yellow", width="content")
 
-            col_1, col_2, col_3 = st.columns(3)
+            st.warning(
+                "⚠️ For this version of the project, all fields are "
+                "required for classification.",
+                width=517,
+            )
+
+            col_1, col_2, col_3, col_4 = st.columns(4)
 
             with col_1:
-                volatile_acidity = st.number_input(
-                    "Volatile Acidity *",
+                fixed_acidity = st.number_input(
+                    "Fixed Acidity *",
                     min_value=0.0,
+                    value=6.2,
+                    format="%.2f",
+                    help="Required field",
+                )
+                chlorides = st.number_input(
+                    "Chlorides *",
+                    min_value=0.0,
+                    value=0.029,
                     format="%.4f",
                     help="Required field",
                 )
                 density = st.number_input(
-                    "Density *", min_value=0.0, format="%.4f", help="Campo obrigatório"
+                    "Density *",
+                    min_value=0.0,
+                    value=0.9892,
+                    format="%.4f",
+                    help="Required field",
                 )
 
             with col_2:
-                alcohol = st.number_input(
-                    "Alcohol *", min_value=0.0, format="%.2f", help="Campo obrigatório"
-                )
-                total_sulfur_dioxide = st.number_input(
-                    "Total Sulfur Dioxide *",
+                volatile_acidity = st.number_input(
+                    "Volatile Acidity *",
                     min_value=0.0,
+                    value=0.66,
+                    format="%.4f",
+                    help="Required field",
+                )
+                free_sulfur_dioxide = st.number_input(
+                    "Free Sulfur Dioxide *",
+                    min_value=0.0,
+                    value=29.0,
+                    format="%.1f",
+                    help="Required field",
+                )
+                ph = st.number_input(
+                    "pH *",
+                    min_value=0.0,
+                    max_value=14.0,
+                    value=3.33,
                     format="%.2f",
                     help="Required field",
                 )
 
             with col_3:
-                chlorides = st.number_input(
-                    "Chlorides *",
+                citric_acid = st.number_input(
+                    "Citric Acid *",
                     min_value=0.0,
-                    format="%.4f",
+                    value=0.48,
+                    format="%.2f",
+                    help="Required field",
+                )
+                total_sulfur_dioxide = st.number_input(
+                    "Total Sulfur Dioxide *",
+                    min_value=0.0,
+                    value=75.0,
+                    format="%.2f",
                     help="Required field",
                 )
                 sulphates = st.number_input(
                     "Sulphates *",
                     min_value=0.0,
+                    value=0.39,
                     format="%.4f",
                     help="Required field",
                 )
 
-            st.header("Optional fields:", divider="yellow", width="content")
-
-            col_4, col_5, col_6 = st.columns(3)
-
             with col_4:
-                fixed_acidity = st.number_input(
-                    "Fixed Acidity", min_value=0.0, value=0.0, format="%.2f"
-                )
-                citric_acid = st.number_input(
-                    "Citric Acid", min_value=0.0, value=0.0, format="%.2f"
-                )
-
-            with col_5:
                 residual_sugar = st.number_input(
-                    "Residual Sugar", min_value=0.0, value=0.0, format="%.2f"
+                    "Residual Sugar *",
+                    min_value=0.0,
+                    value=1.2,
+                    format="%.2f",
+                    help="Required field",
                 )
-                free_sulfur_dioxide = st.number_input(
-                    "Free Sulfur Dioxide", min_value=0.0, value=0.0, format="%.1f"
-                )
-
-            with col_6:
-                ph = st.number_input(
-                    "pH", min_value=0.0, max_value=14.0, value=0.0, format="%.2f"
+                alcohol = st.number_input(
+                    "Alcohol *",
+                    min_value=0.0,
+                    value=12.8,
+                    format="%.2f",
+                    help="Required field",
                 )
 
             submitted = st.form_submit_button("Classify", type="primary")
 
             if submitted:
-                campos_vazios = []
-                if volatile_acidity == 0.0:
-                    campos_vazios.append("Volatile Acidity")
-                if density == 0.0:
-                    campos_vazios.append("Density")
-                if alcohol == 0.0:
-                    campos_vazios.append("Alcohol")
-                if total_sulfur_dioxide == 0.0:
-                    campos_vazios.append("Total Sulfur Dioxide")
-                if chlorides == 0.0:
-                    campos_vazios.append("Chlorides")
-                if sulphates == 0.0:
-                    campos_vazios.append("Sulphates")
+                campos_invalidos = []
+                if fixed_acidity <= 0.0:
+                    campos_invalidos.append("Fixed Acidity")
+                if volatile_acidity <= 0.0:
+                    campos_invalidos.append("Volatile Acidity")
+                if citric_acid <= 0.0:
+                    campos_invalidos.append("Citric Acid")
+                if residual_sugar <= 0.0:
+                    campos_invalidos.append("Residual Sugar")
+                if chlorides <= 0.0:
+                    campos_invalidos.append("Chlorides")
+                if free_sulfur_dioxide <= 0.0:
+                    campos_invalidos.append("Free Sulfur Dioxide")
+                if total_sulfur_dioxide <= 0.0:
+                    campos_invalidos.append("Total Sulfur Dioxide")
+                if density <= 0.0:
+                    campos_invalidos.append("Density")
+                if ph <= 0.0:
+                    campos_invalidos.append("pH")
+                if sulphates <= 0.0:
+                    campos_invalidos.append("Sulphates")
+                if alcohol <= 0.0:
+                    campos_invalidos.append("Alcohol")
 
-                if campos_vazios:
+                if campos_invalidos:
                     st.error(
-                        f"❌ Please fill in the following required fields:\n"
-                        f"- {', '.join(campos_vazios)}"
+                        f"❌ The following fields must be greater than 0:\n"
+                        f"- {', '.join(campos_invalidos)}"
+                    )
+                elif self.model is None:
+                    st.error(
+                        "❌ Model not available. Unable to "
+                        "load the model to perform prediction."
                     )
                 else:
-                    st.success("✅ All required fields have been filled!")
-
-                    if self.model is None:
-                        st.error(
-                            "❌ Model not available. Unable to "
-                            "load the model to perform prediction."
-                        )
-                    else:
-                        # Prepare data for prediction
-                        # Features must be in the same order as training
-                        dados = pd.DataFrame(
-                            [
-                                {
-                                    "volatile acidity": volatile_acidity,
-                                    "density": density,
-                                    "alcohol": alcohol,
-                                    "total sulfur dioxide": total_sulfur_dioxide,
-                                    "chlorides": chlorides,
-                                    "sulphates": sulphates,
-                                }
-                            ]
-                        )
-
-                        # Perform prediction
-                        with st.spinner("Processing classification..."):
-                            resultado = self.model.predict(dados)
-                            qualidade_map = {
-                                0: "Poor (≤ 5)",
-                                1: "Average (6)",
-                                2: "Good (≥ 7)",
+                    dados = pd.DataFrame(
+                        [
+                            {
+                                "fixed acidity": fixed_acidity,
+                                "volatile acidity": volatile_acidity,
+                                "citric acid": citric_acid,
+                                "residual sugar": residual_sugar,
+                                "chlorides": chlorides,
+                                "free sulfur dioxide": free_sulfur_dioxide,
+                                "total sulfur dioxide": total_sulfur_dioxide,
+                                "density": density,
+                                "pH": ph,
+                                "sulphates": sulphates,
+                                "alcohol": alcohol,
                             }
-                            qualidade = qualidade_map.get(resultado[0], "Unknown")
+                        ]
+                    )
 
-                        # Display result
-                        st.success(f"🍷 **Predicted quality:** {qualidade}")
-                        st.info(f"Model used: Random Forest {self.model_version}")
+                    with st.spinner("Processing classification..."):
+                        resultado = self.model.predict(dados)
+                        qualidade_map = {
+                            0: "Poor (≤ 5)",
+                            1: "Average (6)",
+                            2: "Good (≥ 7)",
+                        }
+                        qualidade = qualidade_map.get(resultado[0], "Unknown")
+
+                    st.success(f"🍷 **Predicted quality:** {qualidade}")
 
     def render(self) -> None:
         """

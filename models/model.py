@@ -50,7 +50,7 @@ class Modelo:
         self.modelo.fit(self.X_train, self.y_train)
         return self.modelo
 
-    def evaluate_model(self) -> dict:
+    def evaluate_model(self) -> dict | None:
         """
         Evaluate the trained model using the test set.
 
@@ -58,14 +58,14 @@ class Modelo:
         and detailed classification report.
 
         Returns:
-            Dictionary containing evaluation metrics.
+            Dictionary containing evaluation metrics, or None if no test data available.
 
         Raises:
-            ValueError: If the model was not trained or test data
-                is not available.
+            ValueError: If the model was not trained.
         """
         if self.X_test is None or self.y_test is None:
-            raise ValueError("Test data not available. Execute preprocessing first.")
+            # No test data available - model was trained with 100% of data
+            return None
 
         # Fazer predições no conjunto de teste
         y_pred = self.modelo.predict(self.X_test)
@@ -107,13 +107,14 @@ class Modelo:
         print(f"Modelo salvo em: {filepath}")
 
     def save_metadata(
-        self, metrics: dict, filepath: str = "models/model_metadata.json"
+        self, metrics: dict | None, filepath: str = "models/model_metadata.json"
     ) -> None:
         """
         Save model metadata to a JSON file.
 
         Args:
-            metrics: Dictionary containing model evaluation metrics.
+            metrics: Dictionary containing model evaluation metrics,
+                or None if no test set.
             filepath: Path where the JSON file will be saved.
 
         Raises:
@@ -121,6 +122,18 @@ class Modelo:
         """
         # Garantir que o diretório existe
         Path(filepath).parent.mkdir(parents=True, exist_ok=True)
+
+        # Calculate dataset information
+        if self.X_test is not None and self.y_test is not None:
+            total_samples = len(self.X_train) + len(self.X_test)
+            train_samples = len(self.X_train)
+            test_samples = len(self.X_test)
+            train_test_split = test_samples / total_samples
+        else:
+            total_samples = len(self.X_train)
+            train_samples = len(self.X_train)
+            test_samples = 0
+            train_test_split = 0.0
 
         metadata = {
             "model": {
@@ -132,14 +145,16 @@ class Modelo:
             "training": {
                 "timestamp": datetime.now().isoformat(),
                 "dataset": {
-                    "total_samples": len(self.X_train) + len(self.X_test),
-                    "train_samples": len(self.X_train),
-                    "test_samples": len(self.X_test),
-                    "train_test_split": 0.2,
+                    "total_samples": total_samples,
+                    "train_samples": train_samples,
+                    "test_samples": test_samples,
+                    "train_test_split": train_test_split,
                 },
                 "features": list(self.X_train.columns),
             },
-            "performance": metrics,
+            "performance": metrics
+            if metrics is not None
+            else "No test set - trained with 100% of data",
         }
 
         with Path(filepath).open("w") as f:
@@ -147,19 +162,20 @@ class Modelo:
 
         print(f"Metadados salvos em: {filepath}")
 
-    def train(self, test_size: float = 0.2, random_state: int = 42) -> None:
+    def train(self, test_size: float = 0.0, random_state: int = 42) -> None:
         """
         Execute the complete model training pipeline.
 
         The pipeline includes:
         1. Complete data preprocessing (reading, concatenation,
-           categorization, feature selection, and split)
+           categorization, feature selection, and optional split)
         2. Model training
-        3. Model evaluation
+        3. Model evaluation (if test set exists)
         4. Saving model and metadata
 
         Args:
-            test_size: Proportion of data for testing. Default is 0.2.
+            test_size: Proportion of data for testing. Default is 0.0 (100% training).
+                Set to a value > 0 (e.g., 0.2) to create a test set and evaluate.
             random_state: Seed for reproducibility. Default is 42.
 
         Raises:
@@ -177,20 +193,30 @@ class Modelo:
                 test_size=test_size, random_state=random_state
             )
         )
-        print(
-            f"✓ Dados preparados: {len(self.X_train)} treino, {len(self.X_test)} teste"
-        )
+
+        if self.X_test is not None:
+            print(
+                f"✓ Dados preparados: {len(self.X_train)} treino, "
+                f"{len(self.X_test)} teste"
+            )
+        else:
+            print(f"✓ Dados preparados: {len(self.X_train)} treino (100% dos dados)")
 
         # Treina o modelo
         print("\n[2/4] Treinando modelo Random Forest...")
         self.apply_model()
         print("✓ Modelo treinado com sucesso")
 
-        # Avalia o modelo
-        print("\n[3/4] Avaliando modelo...")
-        metrics = self.evaluate_model()
-        print(f"✓ Acurácia: {metrics['accuracy']:.4f}")
-        print(f"✓ F1-Score (weighted): {metrics['f1_score_weighted']:.4f}")
+        # Avalia o modelo (se houver conjunto de teste)
+        if self.X_test is not None:
+            print("\n[3/4] Avaliando modelo...")
+            metrics = self.evaluate_model()
+            print(f"✓ Acurácia: {metrics['accuracy']:.4f}")
+            print(f"✓ F1-Score (weighted): {metrics['f1_score_weighted']:.4f}")
+        else:
+            print("\n[3/4] Pulando avaliação (sem conjunto de teste)...")
+            metrics = None
+            print("✓ Modelo treinado com 100% dos dados disponíveis")
 
         # Salva o modelo e metadados
         print("\n[4/4] Salvando modelo e metadados...")
