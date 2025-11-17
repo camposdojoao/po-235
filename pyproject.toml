@@ -9,7 +9,7 @@ authors = [
     { name = "João Campos", email = "jpl.campos@hotmail.com" }
 ]
 readme = "README.md"
-requires-python = "==3.13.7"
+requires-python = ">=3.11,<3.12"
 
 # ⚠️ IMPORTANTE: Só adicione/modifique dependências se necessário e com aprovação do time
 # Use: uv add <pacote> para adicionar novas dependências
@@ -21,6 +21,7 @@ dependencies = [
     "scikit-learn>=1.7.2",
     "joblib>=1.5.2",
     "pytest-cov>=7.0.0",
+    "requests>=2.32.0",
 ]
 
 

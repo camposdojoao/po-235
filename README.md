@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Python Version](https://img.shields.io/badge/python-3.13.7-blue.svg)
+![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
@@ -72,7 +72,7 @@ Durante o desenvolvimento inicial, outros algoritmos (XGBoost e Gradient Boostin
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Python 3.13.7**: Linguagem principal do projeto
+- **Python 3.11**: Linguagem principal do projeto
 - **scikit-learn**: Implementação do Random Forest e pipeline de ML
 - **pandas & numpy**: Manipulação e análise de dados
 - **matplotlib & seaborn**: Visualização de dados

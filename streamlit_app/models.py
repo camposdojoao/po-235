@@ -5,7 +5,11 @@ Este módulo contém a classe Models que gerencia a exibição do formulário
 de entrada de dados e previsão usando Random Forest.
 """
 
+import pandas as pd
 import streamlit as st
+from sklearn.base import BaseEstimator
+
+from streamlit_app.model_loader import ModelLoader, get_model_version
 
 
 class Models:
@@ -18,30 +22,43 @@ class Models:
 
         Attributes:
             title (str): Título da página.
-            model: Modelo Random Forest carregado (será carregado das GitHub Releases).
+            model: Modelo Random Forest carregado das GitHub Releases.
+            model_version (str): Versão do modelo em uso.
         """
         self.title = "Classificação de Qualidade de Vinhos"
-        self.model = None  # Será carregado das GitHub Releases
-        self._load_model()
+        self.model_version = get_model_version()
+        self.model = self._load_model()
 
-    def _load_model(self) -> None:
+    def _load_model(self) -> BaseEstimator | None:
         """
-        Carrega o modelo Random Forest treinado.
+        Carrega o modelo Random Forest treinado do GitHub Releases.
 
-        TODO: Implementar carregamento do modelo versionado via GitHub Releases.
-        O modelo será baixado da última release do repositório e carregado
-        usando joblib ou pickle.
+        O modelo é baixado automaticamente da última release disponível
+        e mantido em cache local para melhor performance.
 
         Returns:
-            None
+            Modelo Random Forest carregado e pronto para uso.
+
+        Raises:
+            Exception: Se houver erro ao baixar ou carregar o modelo.
         """
-        # TODO: Implementar carregamento do modelo das GitHub Releases
-        # Exemplo:
-        # from models.inferences import Inferences
-        # inference = Inferences()
-        # model_path = download_model_from_github_release(version="latest")
-        # self.model = inference.load_model(model_path)
-        pass
+        try:
+            loader = ModelLoader(model_version=self.model_version)
+            # Atualiza a versão após o loader determinar qual é (pode ser a última)
+            self.model_version = loader.model_version
+
+            # Informa qual versão foi carregada
+            if self.model_version:
+                st.info(f"📦 Carregando modelo versão: **{self.model_version}**")
+
+            model = loader.load_model("random_forest_model.pkl")
+            return model
+        except Exception as e:
+            st.error(
+                f"❌ Erro ao carregar modelo:\n{str(e)}\n\n"
+                "Verifique se a release existe no GitHub e tente novamente."
+            )
+            return None
 
     def _render_form(self) -> None:
         """
@@ -147,31 +164,39 @@ class Models:
                     st.success("✅ Todos os campos obrigatórios foram preenchidos!")
 
                     if self.model is None:
-                        st.warning(
-                            "⚠️ Modelo não carregado. "
-                            "O modelo será baixado automaticamente das "
-                            "GitHub Releases na próxima versão."
+                        st.error(
+                            "❌ Modelo não disponível. Não foi possível "
+                            "carregar o modelo para realizar a predição."
                         )
                     else:
-                        st.info("Processando classificação com Random Forest...")
+                        # Preparar dados para predição
+                        # As features devem estar na mesma ordem do treinamento
+                        dados = pd.DataFrame(
+                            [
+                                {
+                                    "volatile acidity": volatile_acidity,
+                                    "density": density,
+                                    "alcohol": alcohol,
+                                    "total sulfur dioxide": total_sulfur_dioxide,
+                                    "chlorides": chlorides,
+                                    "sulphates": sulphates,
+                                }
+                            ]
+                        )
 
-                        # TODO: Implementar predição quando modelo estiver carregado
-                        # import pandas as pd
-                        # dados = pd.DataFrame([{
-                        #     "fixed acidity": fixed_acidity,
-                        #     "volatile acidity": volatile_acidity,
-                        #     "citric acid": citric_acid,
-                        #     "residual sugar": residual_sugar,
-                        #     "chlorides": chlorides,
-                        #     "free sulfur dioxide": free_sulfur_dioxide,
-                        #     "total sulfur dioxide": total_sulfur_dioxide,
-                        #     "density": density,
-                        #     "pH": ph,
-                        #     "sulphates": sulphates,
-                        #     "alcohol": alcohol,
-                        # }])
-                        # resultado = self.model.predict(dados)
-                        # st.success(f"🍷 Qualidade prevista: {resultado[0]}")
+                        # Realizar predição
+                        with st.spinner("Processando classificação..."):
+                            resultado = self.model.predict(dados)
+                            qualidade_map = {
+                                0: "Ruim (≤ 5)",
+                                1: "Média (6)",
+                                2: "Boa (≥ 7)",
+                            }
+                            qualidade = qualidade_map.get(resultado[0], "Desconhecida")
+
+                        # Exibir resultado
+                        st.success(f"🍷 **Qualidade prevista:** {qualidade}")
+                        st.info(f"Modelo utilizado: Random Forest {self.model_version}")
 
     def render(self) -> None:
         """

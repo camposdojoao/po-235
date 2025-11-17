@@ -1,0 +1,101 @@
+name: CD - Model Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0, v2.0.0
+
+permissions:
+  contents: write  # Required to create releases
+
+jobs:
+  train-and-release:
+    name: Train Model and Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install Python
+        run: uv python install 3.11
+
+      - name: Clean uv cache for CI
+        run: uv cache prune --ci
+
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv sync
+
+      - name: Train model
+        run: |
+          uv run python entrypoints/train.py
+          echo "Model training completed"
+          echo ""
+          echo "Generated files:"
+          ls -lh models/random_forest_model.joblib
+          ls -lh models/model_metadata.json
+
+      - name: Prepare release artifacts
+        run: |
+          # Copy .joblib to .pkl for release compatibility
+          cp "models/random_forest_model.joblib" "models/random_forest_model.pkl"
+          
+          echo "Artifacts prepared for release:"
+          ls -lh models/random_forest_model.pkl
+          ls -lh models/model_metadata.json
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            models/random_forest_model.pkl
+            models/model_metadata.json
+          body: |
+            ## 🍷 Wine Quality Prediction Model ${{ github.ref_name }}
+            
+            Automated release created from tag ${{ github.ref_name }}.
+            
+            This release contains the trained Random Forest model for wine quality classification.
+            
+            ### How to Use
+            
+            ```python
+            import joblib
+            import requests
+            
+            # Download model
+            url = "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/random_forest_model.pkl"
+            response = requests.get(url)
+            with open('model.pkl', 'wb') as f:
+                f.write(response.content)
+            
+            # Load and use
+            model = joblib.load('model.pkl')
+            prediction = model.predict(wine_features)
+            ```
+            
+            ### Training Details
+            - Python version: 3.11
+            - Framework: scikit-learn
+            - Algorithm: Random Forest Classifier
+            - Trained at: ${{ github.event.head_commit.timestamp }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts for debugging
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-${{ github.ref_name }}
+          path: |
+            models/random_forest_model.pkl
+            models/model_metadata.json
+          retention-days: 30

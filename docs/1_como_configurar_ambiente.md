@@ -100,5 +100,5 @@ source ~/.bashrc
 Com isso feito, vamos instalar a versão do Python (essa parte pode demorar uns minutinhos):
 
 ```
-pyenv install 3.13.7
+pyenv install 3.11
 ```

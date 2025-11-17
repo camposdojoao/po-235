@@ -29,7 +29,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Install Python
-        run: uv python install 3.13.7
+        run: uv python install 3.11
 
       - name: Clean uv cache for CI
         run: uv cache prune --ci
@@ -45,6 +45,39 @@ jobs:
 
       - name: Format check (ruff)
         run: uv run ruff format . --check
+
+      - name: Check requirements.txt sync
+        run: |
+          echo "Verificando se requirements.txt está sincronizado com pyproject.toml..."
+          
+          # Gera requirements.txt temporário
+          uv pip compile pyproject.toml -o requirements.txt.tmp --quiet
+          
+          # Verifica se existe requirements.txt
+          if [ ! -f requirements.txt ]; then
+            echo "❌ requirements.txt não encontrado!"
+            echo "Execute: uv pip compile pyproject.toml -o requirements.txt"
+            exit 1
+          fi
+          
+          # Compara os arquivos (ignora comentários e linhas vazias)
+          if ! diff <(grep -v '^#' requirements.txt | grep -v '^$' | sort) \
+                    <(grep -v '^#' requirements.txt.tmp | grep -v '^$' | sort) > /dev/null; then
+            echo "❌ requirements.txt está desatualizado!"
+            echo ""
+            echo "Execute o seguinte comando para atualizar:"
+            echo "  uv pip compile pyproject.toml -o requirements.txt"
+            echo ""
+            echo "Depois commit e push:"
+            echo "  git add requirements.txt"
+            echo "  git commit -m 'chore: update requirements.txt'"
+            echo "  git push"
+            rm requirements.txt.tmp
+            exit 1
+          fi
+          
+          echo "✓ requirements.txt está sincronizado"
+          rm requirements.txt.tmp
 
       - name: Run tests + coverage
         run: uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=80

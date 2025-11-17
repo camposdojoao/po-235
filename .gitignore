@@ -37,3 +37,14 @@ coverage.xml
 
 # github
 .github/
+
+# Machine Learning Models
+*.pkl
+*.joblib
+models/*.pkl
+models/*.joblib
+models/model_metadata.json
+.model_cache/
+
+# Streamlit
+.streamlit/secrets.toml
