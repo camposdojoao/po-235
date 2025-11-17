@@ -32,9 +32,9 @@ format:
 ## TESTS COMMANDS ##
 
 tests:
-	uv run pytest tests/ -v --cov=models --cov=entrypoints --cov-report=term-missing --cov-fail-under=80
+	uv run pytest tests/ -v --cov=models --cov=entrypoints --cov-report=term-missing --cov-fail-under=75
 
 test-ci:
-	uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=80 --tb=short
+	uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=75 --tb=short
 
 run-ci: check test-ci

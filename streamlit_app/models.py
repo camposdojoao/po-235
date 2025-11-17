@@ -65,37 +65,68 @@ class Models:
         """
 
         with st.form(key="form_random_forest_mandatory"):
-            st.header("Required data:", divider="yellow", width="content")
+            st.header("Wine Chemical Properties:", divider="yellow", width="content")
 
-            col_1, col_2, col_3 = st.columns(3)
+            st.warning(
+                "⚠️ For this version of the project, all fields are "
+                "required for classification.",
+                width=517,
+            )
+
+            col_1, col_2, col_3, col_4 = st.columns(4)
 
             with col_1:
+                fixed_acidity = st.number_input(
+                    "Fixed Acidity *",
+                    min_value=0.0,
+                    format="%.2f",
+                    help="Required field",
+                )
+                chlorides = st.number_input(
+                    "Chlorides *",
+                    min_value=0.0,
+                    format="%.4f",
+                    help="Required field",
+                )
+                density = st.number_input(
+                    "Density *",
+                    min_value=0.0,
+                    format="%.4f",
+                    help="Required field",
+                )
+
+            with col_2:
                 volatile_acidity = st.number_input(
                     "Volatile Acidity *",
                     min_value=0.0,
                     format="%.4f",
                     help="Required field",
                 )
-                density = st.number_input(
-                    "Density *", min_value=0.0, format="%.4f", help="Campo obrigatório"
-                )
-
-            with col_2:
-                alcohol = st.number_input(
-                    "Alcohol *", min_value=0.0, format="%.2f", help="Campo obrigatório"
-                )
-                total_sulfur_dioxide = st.number_input(
-                    "Total Sulfur Dioxide *",
+                free_sulfur_dioxide = st.number_input(
+                    "Free Sulfur Dioxide *",
                     min_value=0.0,
+                    format="%.1f",
+                    help="Required field",
+                )
+                ph = st.number_input(
+                    "pH *",
+                    min_value=0.0,
+                    max_value=14.0,
                     format="%.2f",
                     help="Required field",
                 )
 
             with col_3:
-                chlorides = st.number_input(
-                    "Chlorides *",
+                citric_acid = st.number_input(
+                    "Citric Acid *",
                     min_value=0.0,
-                    format="%.4f",
+                    format="%.2f",
+                    help="Required field",
+                )
+                total_sulfur_dioxide = st.number_input(
+                    "Total Sulfur Dioxide *",
+                    min_value=0.0,
+                    format="%.2f",
                     help="Required field",
                 )
                 sulphates = st.number_input(
@@ -105,47 +136,46 @@ class Models:
                     help="Required field",
                 )
 
-            st.header("Optional fields:", divider="yellow", width="content")
-
-            col_4, col_5, col_6 = st.columns(3)
-
             with col_4:
-                fixed_acidity = st.number_input(
-                    "Fixed Acidity", min_value=0.0, value=0.0, format="%.2f"
-                )
-                citric_acid = st.number_input(
-                    "Citric Acid", min_value=0.0, value=0.0, format="%.2f"
-                )
-
-            with col_5:
                 residual_sugar = st.number_input(
-                    "Residual Sugar", min_value=0.0, value=0.0, format="%.2f"
+                    "Residual Sugar *",
+                    min_value=0.0,
+                    format="%.2f",
+                    help="Required field",
                 )
-                free_sulfur_dioxide = st.number_input(
-                    "Free Sulfur Dioxide", min_value=0.0, value=0.0, format="%.1f"
-                )
-
-            with col_6:
-                ph = st.number_input(
-                    "pH", min_value=0.0, max_value=14.0, value=0.0, format="%.2f"
+                alcohol = st.number_input(
+                    "Alcohol *",
+                    min_value=0.0,
+                    format="%.2f",
+                    help="Required field",
                 )
 
             submitted = st.form_submit_button("Classify", type="primary")
 
             if submitted:
                 campos_vazios = []
+                if fixed_acidity == 0.0:
+                    campos_vazios.append("Fixed Acidity")
                 if volatile_acidity == 0.0:
                     campos_vazios.append("Volatile Acidity")
-                if density == 0.0:
-                    campos_vazios.append("Density")
-                if alcohol == 0.0:
-                    campos_vazios.append("Alcohol")
-                if total_sulfur_dioxide == 0.0:
-                    campos_vazios.append("Total Sulfur Dioxide")
+                if citric_acid == 0.0:
+                    campos_vazios.append("Citric Acid")
+                if residual_sugar == 0.0:
+                    campos_vazios.append("Residual Sugar")
                 if chlorides == 0.0:
                     campos_vazios.append("Chlorides")
+                if free_sulfur_dioxide == 0.0:
+                    campos_vazios.append("Free Sulfur Dioxide")
+                if total_sulfur_dioxide == 0.0:
+                    campos_vazios.append("Total Sulfur Dioxide")
+                if density == 0.0:
+                    campos_vazios.append("Density")
+                if ph == 0.0:
+                    campos_vazios.append("pH")
                 if sulphates == 0.0:
                     campos_vazios.append("Sulphates")
+                if alcohol == 0.0:
+                    campos_vazios.append("Alcohol")
 
                 if campos_vazios:
                     st.error(
@@ -166,12 +196,17 @@ class Models:
                         dados = pd.DataFrame(
                             [
                                 {
+                                    "fixed acidity": fixed_acidity,
                                     "volatile acidity": volatile_acidity,
-                                    "density": density,
-                                    "alcohol": alcohol,
-                                    "total sulfur dioxide": total_sulfur_dioxide,
+                                    "citric acid": citric_acid,
+                                    "residual sugar": residual_sugar,
                                     "chlorides": chlorides,
+                                    "free sulfur dioxide": free_sulfur_dioxide,
+                                    "total sulfur dioxide": total_sulfur_dioxide,
+                                    "density": density,
+                                    "pH": ph,
                                     "sulphates": sulphates,
+                                    "alcohol": alcohol,
                                 }
                             ]
                         )

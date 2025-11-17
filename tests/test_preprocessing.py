@@ -82,19 +82,24 @@ def test_feature_selection() -> None:
     """
     Test selection of relevant features for the model.
 
-    Verifies that the 6 most important features are correctly selected
+    Verifies that all 11 available features are correctly selected
     from the complete dataset:
+    - fixed acidity
     - volatile acidity
-    - density
-    - alcohol
-    - total sulfur dioxide
+    - citric acid
+    - residual sugar
     - chlorides
+    - free sulfur dioxide
+    - total sulfur dioxide
+    - density
+    - pH
     - sulphates
+    - alcohol
 
     Asserts:
         - X is a pandas DataFrame
         - y is a pandas Series
-        - X contains exactly the 6 expected features in the correct order
+        - X contains exactly the 11 expected features in the correct order
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -107,12 +112,17 @@ def test_feature_selection() -> None:
     assert isinstance(y, pd.Series)
 
     expected_features = [
+        "fixed acidity",
         "volatile acidity",
-        "density",
-        "alcohol",
-        "total sulfur dioxide",
+        "citric acid",
+        "residual sugar",
         "chlorides",
+        "free sulfur dioxide",
+        "total sulfur dioxide",
+        "density",
+        "pH",
         "sulphates",
+        "alcohol",
     ]
     assert list(X.columns) == expected_features
 
@@ -122,12 +132,44 @@ def test_split_dados() -> None:
     Test splitting of data into training and test sets.
 
     Verifies that the data is correctly split using stratification
-    to maintain class proportions, and that the split follows the default
+    to maintain class proportions when test_size > 0, with an
     80% training / 20% test ratio.
 
     Asserts:
         - All returns (X_train, X_test, y_train, y_test) have the correct type
+        - X_test and y_test are not None when test_size > 0
         - The training proportion is between 75% and 85% (5% margin)
+    """
+    preprocessing = Preprocessing()
+    preprocessing.leitura_dataset()
+    preprocessing.join_datasets()
+    preprocessing.apply_categoria()
+    preprocessing.feature_selection()
+
+    X_train, X_test, y_train, y_test = preprocessing.split_dados(test_size=0.2)  # noqa: N806
+
+    assert isinstance(X_train, pd.DataFrame)
+    assert isinstance(y_train, pd.Series)
+    assert X_test is not None
+    assert y_test is not None
+    assert isinstance(X_test, pd.DataFrame)
+    assert isinstance(y_test, pd.Series)
+
+    total_size = len(X_train) + len(X_test)
+    train_proportion = len(X_train) / total_size
+    assert 0.75 < train_proportion < 0.85
+
+
+def test_split_dados_default_no_test_set() -> None:
+    """
+    Test that split_dados with default (test_size=0) uses 100% for training.
+
+    Verifies that when test_size=0 (default), all data is used for training
+    and X_test/y_test are None.
+
+    Asserts:
+        - X_train and y_train are DataFrames/Series with data
+        - X_test and y_test are None
     """
     preprocessing = Preprocessing()
     preprocessing.leitura_dataset()
@@ -138,13 +180,10 @@ def test_split_dados() -> None:
     X_train, X_test, y_train, y_test = preprocessing.split_dados()  # noqa: N806
 
     assert isinstance(X_train, pd.DataFrame)
-    assert isinstance(X_test, pd.DataFrame)
     assert isinstance(y_train, pd.Series)
-    assert isinstance(y_test, pd.Series)
-
-    total_size = len(X_train) + len(X_test)
-    train_proportion = len(X_train) / total_size
-    assert 0.75 < train_proportion < 0.85
+    assert len(X_train) > 0
+    assert X_test is None
+    assert y_test is None
 
 
 def test_preprocess() -> None:
@@ -157,36 +196,80 @@ def test_preprocess() -> None:
     2. Concatenation
     3. Quality categorization
     4. Feature selection
-    5. Train/test split
+    5. Train/test split (when test_size > 0)
 
     Args:
         None - uses the actual wine datasets.
 
     Asserts:
         - All returns are of the correct type
-        - X_train and X_test contain data
+        - X_train and X_test contain data when test_size > 0
         - The correct features are present in X_train
 
     Note:
         This is an integration test that validates the complete pipeline.
     """
     preprocessing = Preprocessing()
-    X_train, X_test, y_train, y_test = preprocessing.preprocess()  # noqa: N806
+    X_train, X_test, y_train, y_test = preprocessing.preprocess(test_size=0.2)  # noqa: N806
 
     assert isinstance(X_train, pd.DataFrame)
-    assert isinstance(X_test, pd.DataFrame)
     assert isinstance(y_train, pd.Series)
+    assert X_test is not None
+    assert y_test is not None
+    assert isinstance(X_test, pd.DataFrame)
     assert isinstance(y_test, pd.Series)
 
     assert len(X_train) > 0
     assert len(X_test) > 0
 
     expected_features = [
+        "fixed acidity",
         "volatile acidity",
-        "density",
-        "alcohol",
-        "total sulfur dioxide",
+        "citric acid",
+        "residual sugar",
         "chlorides",
+        "free sulfur dioxide",
+        "total sulfur dioxide",
+        "density",
+        "pH",
         "sulphates",
+        "alcohol",
+    ]
+    assert list(X_train.columns) == expected_features
+
+
+def test_preprocess_default_no_test_set() -> None:
+    """
+    Test preprocessing with default parameters (100% training data).
+
+    Verifies that when test_size is not specified (default=0),
+    all data is used for training and no test set is created.
+
+    Asserts:
+        - X_train and y_train contain all data
+        - X_test and y_test are None
+        - All 11 features are present
+    """
+    preprocessing = Preprocessing()
+    X_train, X_test, y_train, y_test = preprocessing.preprocess()  # noqa: N806
+
+    assert isinstance(X_train, pd.DataFrame)
+    assert isinstance(y_train, pd.Series)
+    assert len(X_train) > 0
+    assert X_test is None
+    assert y_test is None
+
+    expected_features = [
+        "fixed acidity",
+        "volatile acidity",
+        "citric acid",
+        "residual sugar",
+        "chlorides",
+        "free sulfur dioxide",
+        "total sulfur dioxide",
+        "density",
+        "pH",
+        "sulphates",
+        "alcohol",
     ]
     assert list(X_train.columns) == expected_features

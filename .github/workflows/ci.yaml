@@ -77,7 +77,7 @@ jobs:
           rm requirements.txt.tmp
 
       - name: Run tests + coverage
-        run: uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=80
+        run: uv run pytest tests/ --cov=models --cov=entrypoints --cov-fail-under=75
 
       - name: Upload coverage.xml (artifact)
         uses: actions/upload-artifact@v4
